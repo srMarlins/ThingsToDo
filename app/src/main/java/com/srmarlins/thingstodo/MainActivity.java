@@ -2,6 +2,7 @@ package com.srmarlins.thingstodo;
 
 import java.util.Locale;
 
+import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
+import com.evdb.javaapi.data.SearchResult;
+import com.evdb.javaapi.data.request.EventSearchRequest;
+import com.google.android.gms.maps.model.LatLng;
 import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
+import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
+import com.srmarlins.thingstodo.Utils.LocationManager;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
-
-    //TODO - Place this into a secure location
-    private static String EVENTFUL_KEY = "PJVD7NXGr7TKZnSN";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    private SearchResult result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,24 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        final EventfulApi api = new EventfulApi(this);
+        LocationManager locationManager = LocationManager.getInstance(this, new LocationManager.LastLocationListener() {
+            @Override
+            public void onLocationReceived(Location location) {
+                api.requestEvents(location, 10, EventSearchRequest.SortOrder.DATE, new EventfulApi.EventfulResultsListener() {
+                    @Override
+                    public void onEventfulResults(SearchResult results) {
+                        result = results;
+                    }
+
+                    @Override
+                    public void onEventfulError(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
     }
 
     @Override
