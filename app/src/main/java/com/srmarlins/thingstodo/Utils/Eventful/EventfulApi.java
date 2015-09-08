@@ -3,14 +3,9 @@ package com.srmarlins.thingstodo.Utils.Eventful;
 import android.content.Context;
 import android.location.Location;
 
-import com.evdb.javaapi.APIConfiguration;
-import com.evdb.javaapi.EVDBAPIException;
-import com.evdb.javaapi.EVDBRuntimeException;
-import com.evdb.javaapi.data.Event;
-import com.evdb.javaapi.data.SearchResult;
-import com.evdb.javaapi.data.request.EventSearchRequest;
-import com.evdb.javaapi.data.request.SearchRequest;
-import com.evdb.javaapi.operations.EventOperations;
+import com.srmarlins.eventful_android.APIConfiguration;
+import com.srmarlins.eventful_android.data.SearchResult;
+import com.srmarlins.eventful_android.data.request.EventSearchRequest;
 
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -28,19 +23,18 @@ public class EventfulApi {
     private APIConfiguration mConfig;
     private EventfulResultsListener mListener;
     private EventSearchRequest mSearchRequest;
-    private Location mLocation;
-    private int mRange;
 
-    public EventfulApi(Context context){
+    public EventfulApi(Context context, EventfulResultsListener listener){
         mContext = context;
         mConfig = new APIConfiguration();
         mConfig.setEvdbPassword("");
         mConfig.setEvdbUser("");
         mConfig.setApiKey(EVENTFUL_KEY);
+        mListener = listener;
         mEventAsync = new EventfulAsync(mListener);
     }
 
-    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, final EventfulResultsListener listener){
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order){
         mSearchRequest = new EventSearchRequest();
 
         mSearchRequest.setSortOrder(order);
@@ -69,14 +63,6 @@ public class EventfulApi {
 
     public EventSearchRequest getmSearchRequest() {
         return mSearchRequest;
-    }
-
-    public Location getmLocation() {
-        return mLocation;
-    }
-
-    public int getmRange() {
-        return mRange;
     }
 
     public interface EventfulResultsListener {

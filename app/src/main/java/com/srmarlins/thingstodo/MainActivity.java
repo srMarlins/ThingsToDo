@@ -12,9 +12,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-import com.evdb.javaapi.data.SearchResult;
-import com.evdb.javaapi.data.request.EventSearchRequest;
-import com.google.android.gms.maps.model.LatLng;
+import com.srmarlins.eventful_android.data.SearchResult;
+import com.srmarlins.eventful_android.data.request.EventSearchRequest;
 import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
 import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
 import com.srmarlins.thingstodo.Utils.LocationManager;
@@ -77,21 +76,21 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
 
-        final EventfulApi api = new EventfulApi(this);
+        final EventfulApi api = new EventfulApi(this,new EventfulApi.EventfulResultsListener() {
+            @Override
+            public void onEventfulResults(SearchResult results) {
+                result = results;
+            }
+
+            @Override
+            public void onEventfulError(Exception e) {
+                e.printStackTrace();
+            }
+        });
         LocationManager locationManager = LocationManager.getInstance(this, new LocationManager.LastLocationListener() {
             @Override
             public void onLocationReceived(Location location) {
-                api.requestEvents(location, 10, EventSearchRequest.SortOrder.DATE, new EventfulApi.EventfulResultsListener() {
-                    @Override
-                    public void onEventfulResults(SearchResult results) {
-                        result = results;
-                    }
-
-                    @Override
-                    public void onEventfulError(Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+                api.requestEvents(location, 10, EventSearchRequest.SortOrder.DATE);
             }
         });
     }
