@@ -6,9 +6,7 @@ import android.location.Location;
 import com.srmarlins.eventful_android.APIConfiguration;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.data.request.EventSearchRequest;
-
-import java.util.ArrayList;
-import java.util.Formatter;
+import com.srmarlins.eventful_android.data.request.SearchRequest;
 
 
 /**
@@ -17,6 +15,7 @@ import java.util.Formatter;
 public class EventfulApi {
     //TODO - Place this into a secure location
     private static String EVENTFUL_KEY = "PJVD7NXGr7TKZnSN";
+    private static final int NUM_RESULTS = 15;
 
     private Context mContext;
     private EventfulAsync mEventAsync;
@@ -35,14 +34,22 @@ public class EventfulApi {
     }
 
     public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order){
-        mSearchRequest = new EventSearchRequest();
+        requestEvents(location, range, order, "this weekend");
+    }
 
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, String dateRange){
+        buildRequest(location, range, order, dateRange);
+        mEventAsync.execute(this);
+    }
+
+    private SearchRequest buildRequest(Location location, int range, EventSearchRequest.SortOrder order, String dateRange){
+        mSearchRequest = new EventSearchRequest();
+        mSearchRequest.setDateRange(dateRange);
         mSearchRequest.setSortOrder(order);
         mSearchRequest.setLocationRadius(range);
         mSearchRequest.setLocation(String.format("%s,%s", location.getLatitude(), location.getLongitude()));
-
-        mEventAsync.execute(this);
-
+        mSearchRequest.setPageSize(NUM_RESULTS);
+        return mSearchRequest;
     }
 
     public Context getmContext() {

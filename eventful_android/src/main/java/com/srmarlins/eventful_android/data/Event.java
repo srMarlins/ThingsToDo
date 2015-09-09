@@ -21,8 +21,17 @@ public class Event {
             name = "id"
     )
     private String seid;
+    @Element(
+            required = false
+    )
     private String title;
+    @Element(
+            required = false
+    )
     private String url;
+    @Element(
+            required = false
+    )
     private String description;
     @Element(
             name = "start_time", required = false

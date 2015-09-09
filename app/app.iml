@@ -95,6 +95,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
+    <orderEntry type="library" exported="" name="glide-3.6.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-7.8.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-7.8.0" level="project" />
