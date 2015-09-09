@@ -4,8 +4,11 @@ import android.os.AsyncTask;
 
 import com.srmarlins.eventful_android.EVDBAPIException;
 import com.srmarlins.eventful_android.EVDBRuntimeException;
+import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.operations.EventOperations;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,7 +36,22 @@ public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
             mListener.onEventfulError(e);
         }
 
+        searchResult.setEvents(removeImagelessResult(searchResult));
+
         return searchResult;
+    }
+
+    private ArrayList<Event> removeImagelessResult(SearchResult result){
+        ArrayList<Event> events = new ArrayList<>(result.getEvents());
+        ArrayList<Event> parsedEvents = new ArrayList<>();
+
+        for(Event event: events){
+            if(event.getImages() != null && !event.getImages().isEmpty()){
+                parsedEvents.add(event);
+            }
+        }
+
+        return parsedEvents;
     }
 
     @Override
