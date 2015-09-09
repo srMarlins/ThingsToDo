@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
+              android:orientation="vertical"
+              android:gravity="center"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:layout_margin="30dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="September 5th, 2015"
+            android:layout_gravity="left"
+            android:paddingBottom="20dp"
+            android:id="@+id/txtDate"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Sunnyvale, CA"
+            android:gravity="end"
+            android:paddingBottom="20dp"
+            android:id="@+id/txtLoc"/>
+    </LinearLayout>
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/common_signin_btn_icon_normal_dark"
-        android:id="@+id/ivEventImage"/>
+        android:id="@+id/ivEventImage"
+        android:paddingBottom="20dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:text="This is some test text"
-            android:id="@+id/txtTitle"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:text="This is some test text"
-            android:id="@+id/txtTitle"/>
 
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:text="This is some test text"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:id="@+id/txtTitle"/>
+
 
 
 

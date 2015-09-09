@@ -18,7 +18,6 @@ public class EventfulApi {
     private static final int NUM_RESULTS = 15;
 
     private Context mContext;
-    private EventfulAsync mEventAsync;
     private APIConfiguration mConfig;
     private EventfulResultsListener mListener;
     private EventSearchRequest mSearchRequest;
@@ -30,34 +29,31 @@ public class EventfulApi {
         mConfig.setEvdbUser("");
         mConfig.setApiKey(EVENTFUL_KEY);
         mListener = listener;
-        mEventAsync = new EventfulAsync(mListener);
+
     }
 
-    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order){
-        requestEvents(location, range, order, "this weekend");
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum){
+        requestEvents(location, range, order, pageNum, "this weekend");
     }
 
-    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, String dateRange){
-        buildRequest(location, range, order, dateRange);
-        mEventAsync.execute(this);
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange){
+        buildRequest(location, range, order, pageNum, dateRange);
+        (new EventfulAsync(mListener)).execute(this);
     }
 
-    private SearchRequest buildRequest(Location location, int range, EventSearchRequest.SortOrder order, String dateRange){
+    private SearchRequest buildRequest(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange){
         mSearchRequest = new EventSearchRequest();
         mSearchRequest.setDateRange(dateRange);
         mSearchRequest.setSortOrder(order);
         mSearchRequest.setLocationRadius(range);
         mSearchRequest.setLocation(String.format("%s,%s", location.getLatitude(), location.getLongitude()));
         mSearchRequest.setPageSize(NUM_RESULTS);
+        mSearchRequest.setPageNumber(pageNum);
         return mSearchRequest;
     }
 
     public Context getmContext() {
         return mContext;
-    }
-
-    public EventfulAsync getmEventAsync() {
-        return mEventAsync;
     }
 
     public APIConfiguration getmConfig() {
