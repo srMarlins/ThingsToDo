@@ -1,16 +1,16 @@
 package com.srmarlins.thingstodo.Fragments;
 
 
+import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-
+import android.widget.Toast;
 
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
@@ -48,6 +48,11 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
             public void onLocationReceived(Location location) {
                 EventDisplayerFragment.this.mLocation = location;
                 mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+            }
+
+            @Override
+            public void onLocationNotReceived() {
+                Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT);
             }
         });
     }

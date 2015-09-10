@@ -1,7 +1,6 @@
 package com.srmarlins.thingstodo.Utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,18 +53,13 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
                 .build();
     }
 
-    public static void writeLatLngToPrefs(SharedPreferences sharedPreferences, Location location) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(LATITUDE, Double.toString(location.getLatitude()));
-        editor.putString(LONGITUDE, Double.toString(location.getLongitude()));
-        editor.apply();
-    }
-
     @Override
     public void onConnected(Bundle bundle) {
         mLastLocation = getLastKnownLocation();
         if (mLastLocation != null) {
             mListener.onLocationReceived(mLastLocation);
+        }else{
+            mListener.onLocationNotReceived();
         }
     }
 
@@ -106,5 +100,6 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
 
     public interface LastLocationListener{
         void onLocationReceived(Location location);
+        void onLocationNotReceived();
     }
 }
