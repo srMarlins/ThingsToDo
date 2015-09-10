@@ -1,21 +1,22 @@
 package com.srmarlins.thingstodo.Fragments;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.data.request.EventSearchRequest;
-import com.srmarlins.thingstodo.Adapters.EventAdapter;
+import com.srmarlins.thingstodo.Adapters.EventRecyclerViewAdapter;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
 import com.srmarlins.thingstodo.Utils.LocationManager;
@@ -27,13 +28,16 @@ import java.util.ArrayList;
  */
 public class EventDisplayerFragment extends Fragment implements EventfulApi.EventfulResultsListener{
 
+    public static final String TAG = "EventDisplayerFragment";
+
     private Context mContext;
     private EventfulApi mApi;
     private Location mLocation;
     private ArrayList<Event> mEvents = new ArrayList<>();
     private int pageCount = 1;
-    private ListView mListView;
-    private EventAdapter mAdapter;
+    private EventRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecList;
+    private LocationManager mLocationManager;
 
     public static EventDisplayerFragment newInstance() {
         EventDisplayerFragment frag = new EventDisplayerFragment();
@@ -43,18 +47,24 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
     @Override
     public void onResume() {
         super.onResume();
-        LocationManager locationManager = LocationManager.getInstance(mContext, new LocationManager.LastLocationListener() {
-            @Override
-            public void onLocationReceived(Location location) {
-                EventDisplayerFragment.this.mLocation = location;
-                mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-            }
 
-            @Override
-            public void onLocationNotReceived() {
-                Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT);
-            }
-        });
+        if(mLocation == null) {
+
+            mLocationManager = LocationManager.getInstance(mContext, new LocationManager.LastLocationListener() {
+                @Override
+                public void onLocationReceived(Location location) {
+                    EventDisplayerFragment.this.mLocation = location;
+                    mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+                }
+
+                @Override
+                public void onLocationNotReceived() {
+                    Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT);
+                }
+            });
+        }else{
+            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,17 +74,27 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mListView = (ListView) rootView.findViewById(R.id.lv_events);
-        mAdapter = new EventAdapter(mContext, mEvents);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnScrollListener(onScrollListener());
+        mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
+        mRecList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecList.setLayoutManager(llm);
+        mAdapter = new EventRecyclerViewAdapter(mContext, mEvents);
+        mRecList.setAdapter(mAdapter);
 
         return rootView;
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override
@@ -88,31 +108,5 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
     @Override
     public void onEventfulError(Exception e) {
         e.printStackTrace();
-    }
-
-    private AbsListView.OnScrollListener onScrollListener() {
-        return new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    int pos = mListView.getLastVisiblePosition();
-                    int count = mListView.getCount();
-                    if(pos + 5 >= count){
-                        if(mLocation != null) {
-                            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-                            pageCount++;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {
-
-            }
-
-        };
     }
 }

@@ -31,6 +31,10 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
     protected LocationManager(Context context, LastLocationListener listener) {
         mContext = context;
         mListener = listener;
+        initGoogleApiClient();
+    }
+
+    public void initGoogleApiClient(){
         buildGoogleApiClient();
         mGoogleApiClient.connect();
     }
@@ -41,6 +45,8 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
         }
         if (mManagerInstance == null) {
             mManagerInstance = new LocationManager(context, listener);
+        }else{
+            mManagerInstance.initGoogleApiClient();
         }
         return mManagerInstance;
     }

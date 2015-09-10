@@ -58,7 +58,6 @@ public class EventAdapter extends BaseAdapter {
 
             holder.location = (TextView) convertView.findViewById(R.id.txtLoc);
             holder.date = (TextView) convertView.findViewById(R.id.txtDate);
-            holder.image = (ImageView) convertView.findViewById(R.id.ivEventImage);
             holder.title = (TextView) convertView.findViewById(R.id.txtTitle);
 
             convertView.setTag(holder);
