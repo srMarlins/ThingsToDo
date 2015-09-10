@@ -2,6 +2,7 @@ package com.srmarlins.thingstodo.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.nfc.FormatException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.thingstodo.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,11 +69,26 @@ public class EventAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        String dateString = "";
+        DateFormat oldF = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        DateFormat newF = new SimpleDateFormat("MMMM dd, ''yy");
 
-        holder.date.setText(currentEvent.getStartTime().toString());
-        holder.location.setText(currentEvent.getVenueAddress() + ", " + currentEvent.getVenueRegionAbbreviation());
+        try {
+            if (currentEvent.getStartTime().compareTo(java.util.Calendar.getInstance().getTime()) >= 0) {
+                Date date = oldF.parse(currentEvent.getStartTime().toString());
+                dateString = newF.format(date).toString();
+            } else {
+                Date date = oldF.parse(currentEvent.getStopTime().toString());
+                dateString = "Ends: " + newF.format(date).toString();
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        holder.date.setText(dateString);
+        holder.location.setText(currentEvent.getVenueCity() + ", " + currentEvent.getVenueRegionAbbreviation());
         holder.title.setText(currentEvent.getTitle());
-        Glide.with(mContext).load(currentEvent.getImages().get(currentEvent.getImages().size()-1).getUrl()).into(holder.image);
+        Glide.with(mContext).load(currentEvent.getImages().get(currentEvent.getImages().size() - 1).getUrl()).into(holder.image);
 
         return convertView;
     }

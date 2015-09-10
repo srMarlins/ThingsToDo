@@ -74,8 +74,10 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
 
     @Override
     public void onEventfulResults(SearchResult results) {
-        mEvents.addAll(results.getEvents());
-        mAdapter.notifyDataSetChanged();
+        if(results != null) {
+            mEvents.addAll(results.getEvents());
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -88,17 +90,22 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    int pos = mListView.getLastVisiblePosition();
+                    int count = mListView.getCount();
+                    if(pos + 5 >= count){
+                        if(mLocation != null) {
+                            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+                            pageCount++;
+                        }
+                    }
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                                  int totalItemCount) {
-                if(mListView.getLastVisiblePosition() + 5 >= totalItemCount){
-                    if(mLocation != null) {
-                        mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-                        pageCount++;
-                    }
-                }
+
             }
 
         };

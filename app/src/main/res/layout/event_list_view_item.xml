@@ -28,10 +28,12 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:src="@drawable/common_signin_btn_icon_normal_dark"
         android:id="@+id/ivEventImage"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent"
         android:paddingBottom="20dp"/>
 
 
