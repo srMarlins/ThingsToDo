@@ -36,7 +36,9 @@ public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
             mListener.onEventfulError(e);
         }
 
-        searchResult.setEvents(removeImagelessResult(searchResult));
+        if(searchResult != null) {
+            searchResult.setEvents(removeImagelessResult(searchResult));
+        }
 
         return searchResult;
     }
