@@ -1,11 +1,17 @@
 package com.srmarlins.thingstodo.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +29,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     private ArrayList<Event> mEventsList;
     private Context mContext;
+
+    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
+        mContext = context;
+        mEventsList = events;
+    }
 
     @Override
     public EventRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -42,6 +53,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
         holder.description.setText(Html.fromHtml(event.getDescription()));
+        holder.layout.setBackgroundColor(Color.WHITE);
     }
 
     public String formatDate(Event event){
@@ -75,12 +87,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(int position, int direction) {
         mEventsList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements CardSwipeHelper.CardSwipeViewHolderAdapter {
 
         public View mView;
         public RoundedImageView logo;
@@ -88,6 +100,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         public TextView date;
         public TextView location;
         public TextView description;
+        public LinearLayout layout;
 
         public ViewHolder(View cardView) {
             super(cardView);
@@ -97,11 +110,22 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             this.date = (TextView) mView.findViewById(R.id.txtDate);
             this.location = (TextView) mView.findViewById(R.id.txtLoc);
             this.description = (TextView) mView.findViewById(R.id.txtDesc);
+            this.layout = (LinearLayout) mView.findViewById(R.id.card_view_layout);
         }
-    }
 
-    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
-        mContext = context;
-        mEventsList = events;
+        @Override
+        public void onSwiped(double x) {
+            if(x > 0.0){
+                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_accept));
+            }else if(x == 0.0){
+                layout.setBackgroundColor(Color.WHITE);
+            }else if(x < 0.0){
+                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_decline));
+            }
+        }
+
+        @Override
+        public void onClear() {
+        }
     }
 }
