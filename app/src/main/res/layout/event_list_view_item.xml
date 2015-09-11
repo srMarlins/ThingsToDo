@@ -20,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="5dp"
+            android:background="@android:color/white"
+            android:id="@+id/card_view_layout"
             android:orientation="vertical">
 
             <LinearLayout
