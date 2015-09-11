@@ -46,11 +46,6 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
         return frag;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setupLocationManager();
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,6 +65,8 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
         ItemTouchHelper.Callback callback = new CardSwipeHelper(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecList);
+
+        setupLocationManager();
 
         return rootView;
     }
