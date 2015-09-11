@@ -47,6 +47,7 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
             mManagerInstance = new LocationManager(context, listener);
         }else{
             mManagerInstance.initGoogleApiClient();
+            mManagerInstance.setListener(listener);
         }
         return mManagerInstance;
     }
@@ -57,6 +58,10 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    public void setListener(LastLocationListener listener){
+        mListener = listener;
     }
 
     @Override
