@@ -26,14 +26,14 @@ import java.util.ArrayList;
 /**
  * Created by jfowler on 9/4/15.
  */
-public class EventDisplayerFragment extends Fragment implements EventfulApi.EventfulResultsListener{
+public class EventDisplayerFragment extends Fragment implements EventfulApi.EventfulResultsListener, LocationManager.LastLocationListener{
 
     public static final String TAG = "EventDisplayerFragment";
 
     private Context mContext;
     private EventfulApi mApi;
     private Location mLocation;
-    private ArrayList<Event> mEvents = new ArrayList<>();
+    private ArrayList<Event> mEvents;
     private int pageCount = 1;
     private EventRecyclerViewAdapter mAdapter;
     private RecyclerView mRecList;
@@ -47,32 +47,15 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
     @Override
     public void onResume() {
         super.onResume();
-
-        if(mLocation == null) {
-
-            mLocationManager = LocationManager.getInstance(mContext, new LocationManager.LastLocationListener() {
-                @Override
-                public void onLocationReceived(Location location) {
-                    EventDisplayerFragment.this.mLocation = location;
-                    mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-                }
-
-                @Override
-                public void onLocationNotReceived() {
-                    Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT);
-                }
-            });
-        }else{
-            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-        }
+        setupLocationManager();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mApi = new EventfulApi(mContext, EventDisplayerFragment.this);
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        mEvents = new ArrayList<>();
 
         mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
         mRecList.setHasFixedSize(true);
@@ -85,10 +68,12 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
         return rootView;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
+    private void setupLocationManager(){
+        if(mLocation == null) {
+            mLocationManager = LocationManager.getInstance(mContext, this);
+        }else{
+            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+        }
     }
 
     @Override
@@ -108,5 +93,16 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
     @Override
     public void onEventfulError(Exception e) {
         e.printStackTrace();
+    }
+
+    @Override
+    public void onLocationReceived(Location location) {
+        mLocation = location;
+        mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
+    }
+
+    @Override
+    public void onLocationNotReceived() {
+        Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT).show();
     }
 }
