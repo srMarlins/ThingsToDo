@@ -19,37 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
+public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> implements CardSwipeHelper.CardSwipeHelperAdapter {
 
     private ArrayList<Event> mEventsList;
     private Context mContext;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public View mView;
-        public RoundedImageView logo;
-        public TextView title;
-        public TextView date;
-        public TextView location;
-        public TextView description;
-
-        public ViewHolder(View cardView) {
-            super(cardView);
-            mView = cardView;
-            this.logo = (RoundedImageView) mView.findViewById(R.id.event_image);
-            this.title = (TextView) mView.findViewById(R.id.txtTitle);
-            this.date = (TextView) mView.findViewById(R.id.txtDate);
-            this.location = (TextView) mView.findViewById(R.id.txtLoc);
-            this.description = (TextView) mView.findViewById(R.id.txtDesc);
-        }
-    }
-
-    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
-        mContext = context;
-        mEventsList = events;
-    }
-
-    // Create new views (invoked by the layout manager)
     @Override
     public EventRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
@@ -59,7 +33,6 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Event event = mEventsList.get(position);
@@ -91,9 +64,44 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         return dateString;
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mEventsList.size();
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        mEventsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public View mView;
+        public RoundedImageView logo;
+        public TextView title;
+        public TextView date;
+        public TextView location;
+        public TextView description;
+
+        public ViewHolder(View cardView) {
+            super(cardView);
+            mView = cardView;
+            this.logo = (RoundedImageView) mView.findViewById(R.id.event_image);
+            this.title = (TextView) mView.findViewById(R.id.txtTitle);
+            this.date = (TextView) mView.findViewById(R.id.txtDate);
+            this.location = (TextView) mView.findViewById(R.id.txtLoc);
+            this.description = (TextView) mView.findViewById(R.id.txtDesc);
+        }
+    }
+
+    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
+        mContext = context;
+        mEventsList = events;
     }
 }
