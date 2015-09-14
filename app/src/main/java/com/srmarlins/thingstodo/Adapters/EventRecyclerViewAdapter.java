@@ -119,17 +119,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             if(x > COLOR_THRESHOLD){
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_accept);
             }else if(x == 0.0){
-                onClear();
                 layoutColor = Color.WHITE;
             }else if(x < -COLOR_THRESHOLD){
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_decline);
             }
 
             layout.setBackgroundColor(layoutColor);
-        }
-
-        @Override
-        public void onClear() {
         }
 
     }
