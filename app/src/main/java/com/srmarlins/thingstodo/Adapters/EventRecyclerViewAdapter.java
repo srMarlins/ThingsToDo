@@ -2,12 +2,10 @@ package com.srmarlins.thingstodo.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
-import android.view.DragEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +92,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements CardSwipeHelper.CardSwipeViewHolderAdapter {
 
+        private static final float COLOR_THRESHOLD = 280.0f;
         public View mView;
         public RoundedImageView logo;
         public TextView title;
@@ -115,17 +114,23 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
         @Override
         public void onSwiped(double x) {
-            if(x > 0.0){
-                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_accept));
+            int layoutColor = 0;
+
+            if(x > COLOR_THRESHOLD){
+                layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_accept);
             }else if(x == 0.0){
-                layout.setBackgroundColor(Color.WHITE);
-            }else if(x < 0.0){
-                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_decline));
+                onClear();
+                layoutColor = Color.WHITE;
+            }else if(x < -COLOR_THRESHOLD){
+                layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_decline);
             }
+
+            layout.setBackgroundColor(layoutColor);
         }
 
         @Override
         public void onClear() {
         }
+
     }
 }

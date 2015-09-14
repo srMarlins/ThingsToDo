@@ -54,6 +54,11 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
+    @Override
+    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+        return .8f;
+    }
+
     public interface CardSwipeHelperAdapter {
         void onItemMove(int fromPosition, int toPosition);
         void onItemDismiss(int position, int direction);
