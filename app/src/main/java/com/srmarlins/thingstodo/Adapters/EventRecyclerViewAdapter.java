@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.R;
+import com.srmarlins.thingstodo.Utils.EventManager;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,10 +29,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     private ArrayList<Event> mEventsList;
     private Context mContext;
+    private EventManager mManager;
 
-    public EventRecyclerViewAdapter(Context context) {
+    public EventRecyclerViewAdapter(Context context, EventManager manager) {
         mContext = context;
         mEventsList = new ArrayList<>();
+        mManager = manager;
     }
 
     public void updateEventList(ArrayList<Event> list){
@@ -91,7 +95,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public void onItemDismiss(int position, int direction) {
-        mEventsList.remove(position);
+        if(direction == ItemTouchHelper.START){
+            mManager.declineEvent(mEventsList.get(position));
+        }else if(direction == ItemTouchHelper.END){
+            mManager.acceptEvent(mEventsList.get(position));
+        }
         notifyItemRemoved(position);
     }
 

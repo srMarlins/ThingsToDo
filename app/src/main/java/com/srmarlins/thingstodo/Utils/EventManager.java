@@ -68,6 +68,18 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return list1;
     }
 
+    public void declineEvent(Event event){
+        mCurrentEvents.remove(event);
+        mDeclinedEvents.add(event);
+        mListener.onEventsChanged(mCurrentEvents);
+    }
+
+    public void acceptEvent(Event event){
+        mCurrentEvents.remove(event);
+        mAcceptedEvents.add(event);
+        mListener.onEventsChanged(mCurrentEvents);
+    }
+
     @Override
     public void onEventfulError(Exception e) {
         e.printStackTrace();

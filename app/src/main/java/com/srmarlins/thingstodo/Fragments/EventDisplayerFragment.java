@@ -60,7 +60,7 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecList.setLayoutManager(llm);
-        mAdapter = new EventRecyclerViewAdapter(mContext);
+        mAdapter = new EventRecyclerViewAdapter(mContext, mEventManager);
         mRecList.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback callback = new CardSwipeHelper(mAdapter);

@@ -40,11 +40,6 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-        if(i == ItemTouchHelper.START){
-
-        }else if(i == ItemTouchHelper.END){
-
-        }
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition(), i);
     }
 
