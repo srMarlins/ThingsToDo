@@ -28,9 +28,14 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     private ArrayList<Event> mEventsList;
     private Context mContext;
 
-    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
+    public EventRecyclerViewAdapter(Context context) {
         mContext = context;
-        mEventsList = events;
+        mEventsList = new ArrayList<>();
+    }
+
+    public void updateEventList(ArrayList<Event> list){
+        mEventsList = list;
+        notifyDataSetChanged();
     }
 
     @Override

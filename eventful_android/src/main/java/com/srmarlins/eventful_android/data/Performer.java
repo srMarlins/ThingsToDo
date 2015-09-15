@@ -17,44 +17,52 @@ import java.util.List;
 @Default(DefaultType.FIELD)
 public class Performer {
     @Element(
-            name = "id"
+            name = "id", required = false
     )
     private String spid;
     @Attribute(
-            name = "id"
+            name = "id", required = false
     )
     private String attributeId;
     private String name;
     @Element(
-            name = "is_human"
+            name = "is_human", required = false
     )
     private boolean human;
     @Element(
-            name = "short_bio"
+            name = "short_bio", required = false
     )
     private String shortBio;
     @Element(
-            name = "long_bio"
+            name = "long_bio", required = false
     )
     private String longBio;
     @Element(
-            name = "demand_count"
+            name = "demand_count", required = false
     )
     private int demandCount;
     @Element(
-            name = "demand_member_count"
+            name = "demand_member_count", required = false
     )
     private int demandMemberCount;
     @Element(
-            name = "event_count"
+            name = "event_count", required = false
     )
     private int eventCount;
-    @Attribute
+    @Attribute(
+            required = false
+    )
     private Date created;
+    @Element(
+            required = false
+    )
     private String creator;
+    @Element(
+            required = false
+    )
     private boolean withdrawn;
     @Element(
-            name = "withdrawn_note"
+            name = "withdrawn_note", required = false
     )
     private String withdrawnNote;
     @ElementList(

@@ -20,6 +20,7 @@ import com.srmarlins.eventful_android.data.request.EventSearchRequest;
 import com.srmarlins.thingstodo.Adapters.CardSwipeHelper;
 import com.srmarlins.thingstodo.Adapters.EventRecyclerViewAdapter;
 import com.srmarlins.thingstodo.R;
+import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
 import com.srmarlins.thingstodo.Utils.LocationManager;
 
@@ -28,18 +29,16 @@ import java.util.ArrayList;
 /**
  * Created by jfowler on 9/4/15.
  */
-public class EventDisplayerFragment extends Fragment implements EventfulApi.EventfulResultsListener, LocationManager.LastLocationListener{
+public class EventDisplayerFragment extends Fragment implements EventManager.EventListener{
 
     public static final String TAG = "EventDisplayerFragment";
+    public static final int RADIUS = 15;
 
     private Context mContext;
-    private EventfulApi mApi;
-    private Location mLocation;
-    private ArrayList<Event> mEvents;
-    private int pageCount = 1;
     private EventRecyclerViewAdapter mAdapter;
     private RecyclerView mRecList;
-    private LocationManager mLocationManager;
+    private EventManager mEventManager;
+    private ArrayList<Event> mEvents;
 
     public static EventDisplayerFragment newInstance() {
         EventDisplayerFragment frag = new EventDisplayerFragment();
@@ -51,7 +50,9 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mApi = new EventfulApi(mContext, EventDisplayerFragment.this);
+        mEventManager = new EventManager(mContext, this);
+        mEventManager.loadEvents(RADIUS);
+
         mEvents = new ArrayList<>();
 
         mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
@@ -59,25 +60,16 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecList.setLayoutManager(llm);
-        mAdapter = new EventRecyclerViewAdapter(mContext, mEvents);
+        mAdapter = new EventRecyclerViewAdapter(mContext);
         mRecList.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback callback = new CardSwipeHelper(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecList);
 
-        setupLocationManager();
-
         return rootView;
     }
 
-    private void setupLocationManager(){
-        if(mLocation == null) {
-            mLocationManager = LocationManager.getInstance(mContext, this);
-        }else{
-            mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -86,26 +78,7 @@ public class EventDisplayerFragment extends Fragment implements EventfulApi.Even
     }
 
     @Override
-    public void onEventfulResults(SearchResult results) {
-        if(results != null) {
-            mEvents.addAll(results.getEvents());
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onEventfulError(Exception e) {
-        e.printStackTrace();
-    }
-
-    @Override
-    public void onLocationReceived(Location location) {
-        mLocation = location;
-        mApi.requestEvents(mLocation, 10, EventSearchRequest.SortOrder.DATE, pageCount);
-    }
-
-    @Override
-    public void onLocationNotReceived() {
-        Toast.makeText(mContext, "Location information unavailable", Toast.LENGTH_SHORT).show();
+    public void onEventsChanged(ArrayList<Event> updatedEventList) {
+        mAdapter.updateEventList(updatedEventList);
     }
 }

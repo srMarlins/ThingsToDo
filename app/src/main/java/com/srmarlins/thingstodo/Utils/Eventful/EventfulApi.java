@@ -68,6 +68,10 @@ public class EventfulApi {
         return mSearchRequest;
     }
 
+    public void setContext(Context context){
+        mContext = context;
+    }
+
     public interface EventfulResultsListener {
         void onEventfulResults(SearchResult results);
         void onEventfulError(Exception e);
