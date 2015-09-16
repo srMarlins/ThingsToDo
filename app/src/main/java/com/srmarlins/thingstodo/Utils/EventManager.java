@@ -90,7 +90,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     }
 
     public void acceptEvent(Event event){
-        mCalendar.insertEvent(event, mCalendar.getCalendarIds()[0]);
+        mCalendar.insertEvent(event, mCalendar.getCalendars()[0].getId());
         mCurrentEvents.remove(event);
         mAcceptedEvents.add(event);
         mListener.onEventsChanged(mCurrentEvents);
