@@ -3,6 +3,7 @@ package com.srmarlins.thingstodo.Utils;
 import android.content.Context;
 import android.location.Location;
 
+import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.data.request.EventSearchRequest;
@@ -22,8 +23,11 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     private Location mLocation;
     private int mRadius;
     private EventListener mListener;
+    private boolean mLoading = false;
+    private CalendarManager mCalendar;
 
-    private int mRequestNumber = 0;
+    private int mPageCount = 1;
+    private int mRequestNumber = 1;
 
     public EventManager(Context context, EventListener listener){
         mApi = new EventfulApi(context, this);
@@ -31,6 +35,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mCurrentEvents = new ArrayList<>();
         mDeclinedEvents = new ArrayList<>();
         mAcceptedEvents = new ArrayList<>();
+        mCalendar = new CalendarManager(context);
     }
 
     public void setContext(Context context){
@@ -38,7 +43,13 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     }
 
     public void loadEvents(int radius){
+        if(mRequestNumber > mPageCount){
+            return;
+        }
+
+        mLoading = true;
         mRadius = radius;
+
         if(mLocation == null) {
             LocationManager.getInstance(mApi.getmContext(), this);
         }else{
@@ -49,6 +60,8 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
 
     @Override
     public void onEventfulResults(SearchResult results) {
+        mPageCount = results.getPageCount();
+        mLoading = false;
         if(results != null) {
             ArrayList<Event> newEvents = new ArrayList<>(results.getEvents());
             mCurrentEvents = mergeEvents(mCurrentEvents, newEvents);
@@ -56,15 +69,17 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         }
     }
 
+    public boolean isLoading(){
+        return mLoading;
+    }
+
     private ArrayList<Event> mergeEvents(ArrayList<Event> list1, ArrayList<Event> list2){
         for(Event event1: list1){
-            for(Event event2: list2){
-                if(event1.getSeid() == event2.getSeid()){
-                    list2.remove(event2);
-                }
-            }
+            list2.remove(event1);
         }
-        list1.addAll(list2);
+        if(!list2.isEmpty()) {
+            list1.addAll(list2);
+        }
         return list1;
     }
 
@@ -75,6 +90,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     }
 
     public void acceptEvent(Event event){
+        mCalendar.insertEvent(event, mCalendar.getCalendarIds()[0]);
         mCurrentEvents.remove(event);
         mAcceptedEvents.add(event);
         mListener.onEventsChanged(mCurrentEvents);

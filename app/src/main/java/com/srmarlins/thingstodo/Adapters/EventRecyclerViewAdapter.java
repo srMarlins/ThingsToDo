@@ -59,7 +59,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.date.setText(formatDate(event));
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
-        holder.description.setText(Html.fromHtml(event.getDescription()));
+        holder.description.setText(event.getDescription());
         holder.layout.setBackgroundColor(Color.WHITE);
     }
 

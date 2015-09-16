@@ -33,6 +33,7 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
 
     public static final String TAG = "EventDisplayerFragment";
     public static final int RADIUS = 15;
+    public static final int RELOAD_AT = 5;
 
     private Context mContext;
     private EventRecyclerViewAdapter mAdapter;
@@ -80,5 +81,8 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
     @Override
     public void onEventsChanged(ArrayList<Event> updatedEventList) {
         mAdapter.updateEventList(updatedEventList);
+        if(!mEventManager.isLoading() && updatedEventList.size() < RELOAD_AT){
+            mEventManager.loadEvents(RADIUS);
+        }
     }
 }
