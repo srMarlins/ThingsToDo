@@ -11,8 +11,6 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
     private final CardSwipeHelperAdapter mAdapter;
 
-    private int previousXValue = 0;
-
     public CardSwipeHelper(CardSwipeHelperAdapter adapter) {
         mAdapter = adapter;
     }
@@ -42,9 +40,6 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-        if(viewHolder instanceof EventRecyclerViewAdapter.ViewHolder){
-            ((EventRecyclerViewAdapter.ViewHolder)viewHolder).onClear();
-        }
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition(), i);
     }
 
@@ -54,6 +49,11 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
+    @Override
+    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+        return .8f;
+    }
+
     public interface CardSwipeHelperAdapter {
         void onItemMove(int fromPosition, int toPosition);
         void onItemDismiss(int position, int direction);
@@ -61,7 +61,6 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
     public interface CardSwipeViewHolderAdapter{
         void onSwiped(double directionX);
-        void onClear();
     }
 
 }
