@@ -1,6 +1,7 @@
 package com.srmarlins.thingstodo.Utils.Eventful;
 
 import android.os.AsyncTask;
+import android.text.Html;
 
 import com.srmarlins.eventful_android.EVDBAPIException;
 import com.srmarlins.eventful_android.EVDBRuntimeException;
@@ -49,6 +50,10 @@ public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
 
         for(Event event: events){
             if(event.getImages() != null && !event.getImages().isEmpty()){
+                String desc = event.getDescription();
+                if(desc != null){
+                    event.setDescription(Html.fromHtml(desc).toString());
+                }
                 parsedEvents.add(event);
             }
         }

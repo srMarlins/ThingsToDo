@@ -2,12 +2,11 @@ package com.srmarlins.thingstodo.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
-import android.view.DragEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.R;
+import com.srmarlins.thingstodo.Utils.EventManager;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,10 +29,17 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     private ArrayList<Event> mEventsList;
     private Context mContext;
+    private EventManager mManager;
 
-    public EventRecyclerViewAdapter(Context context, ArrayList<Event> events) {
+    public EventRecyclerViewAdapter(Context context, EventManager manager) {
         mContext = context;
-        mEventsList = events;
+        mEventsList = new ArrayList<>();
+        mManager = manager;
+    }
+
+    public void updateEventList(ArrayList<Event> list){
+        mEventsList = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -52,7 +59,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.date.setText(formatDate(event));
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
-        holder.description.setText(Html.fromHtml(event.getDescription()));
+        holder.description.setText(event.getDescription());
         holder.layout.setBackgroundColor(Color.WHITE);
     }
 
@@ -88,12 +95,17 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public void onItemDismiss(int position, int direction) {
-        mEventsList.remove(position);
+        if(direction == ItemTouchHelper.START){
+            mManager.declineEvent(mEventsList.get(position));
+        }else if(direction == ItemTouchHelper.END){
+            mManager.acceptEvent(mEventsList.get(position));
+        }
         notifyItemRemoved(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements CardSwipeHelper.CardSwipeViewHolderAdapter {
 
+        private static final float COLOR_THRESHOLD = 280.0f;
         public View mView;
         public RoundedImageView logo;
         public TextView title;
@@ -115,17 +127,18 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
         @Override
         public void onSwiped(double x) {
-            if(x > 0.0){
-                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_accept));
+            int layoutColor = 0;
+
+            if(x > COLOR_THRESHOLD){
+                layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_accept);
             }else if(x == 0.0){
-                layout.setBackgroundColor(Color.WHITE);
-            }else if(x < 0.0){
-                layout.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.card_decline));
+                layoutColor = Color.WHITE;
+            }else if(x < -COLOR_THRESHOLD){
+                layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_decline);
             }
+
+            layout.setBackgroundColor(layoutColor);
         }
 
-        @Override
-        public void onClear() {
-        }
     }
 }
