@@ -60,9 +60,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
 
     @Override
     public void onEventfulResults(SearchResult results) {
-        mPageCount = results.getPageCount();
         mLoading = false;
         if(results != null) {
+            mPageCount = results.getPageCount();
             ArrayList<Event> newEvents = new ArrayList<>(results.getEvents());
             mCurrentEvents = mergeEvents(mCurrentEvents, newEvents);
             mListener.onEventsChanged(mCurrentEvents);
