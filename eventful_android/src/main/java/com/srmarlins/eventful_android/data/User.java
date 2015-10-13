@@ -19,25 +19,37 @@ import java.util.List;
 public class User {
     private String username;
     @Element(
-            name = "status"
+            name = "status", required = false
     )
     private String eventWatchingGoingStatus;
+    @Element(
+            required = false
+    )
     private String bio;
+    @Element(
+            required = false
+    )
     private String hometown;
     @Element(
-            name = "first_name"
+            name = "first_name", required = false
     )
     private String firstName;
     @Element(
-            name = "last_name"
+            name = "last_name", required = false
     )
     private String lastName;
+    @Element(
+            required = false
+    )
     private String interests;
     @Element(
-            name = "registration_date"
+            name = "registration_date", required = false
     )
     @Attribute
     private Date registrationDate;
+    @Element(
+            required = false
+    )
     private String reputation;
     @ElementList(
             name = "links", required = false

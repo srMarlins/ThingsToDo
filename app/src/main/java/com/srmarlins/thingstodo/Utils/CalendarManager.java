@@ -7,10 +7,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
+import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
@@ -19,6 +21,10 @@ import java.util.TimeZone;
 public class CalendarManager {
 
     public static final int EVENT_INSERT_TOKEN = 999;
+    public static final int EVENT_QUERY_TOKEN = 1234;
+    public static final String BASE_CALENDAR_URI = "content://com.android.calendar";
+    public static final String CALENDAR_URI = BASE_CALENDAR_URI + "/calendars";
+    public static final String EVENT_URI = BASE_CALENDAR_URI + "/events";
 
     private ContentResolver mContentResolver;
 
@@ -50,7 +56,7 @@ public class CalendarManager {
     public EventCalendar[] getCalendars() {
         String projection[] = {"_id", "calendar_displayName"};
         Uri calendars;
-        calendars = Uri.parse("content://com.android.calendar/calendars");
+        calendars = Uri.parse(CALENDAR_URI);
 
         Cursor managedCursor = mContentResolver.query(calendars, projection, null, null, null);
         EventCalendar[] cals = new EventCalendar[managedCursor.getCount()];
@@ -69,5 +75,50 @@ public class CalendarManager {
             managedCursor.close();
         }
         return cals;
+    }
+
+    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, AsyncCalendarQuery.QueryCompletionListener listener){
+        AsyncCalendarQuery asyncCalendarQuery = new AsyncCalendarQuery(mContentResolver);
+        long calendarId = calendar.getId();
+        Uri calendarUri = Uri.parse(EVENT_URI);
+
+        asyncCalendarQuery.startQuery(EVENT_QUERY_TOKEN, null, calendarUri, fields, "calendar_id=" + calendarId, null, null, listener);
+    }
+
+    public Event[] parseEventResultCursor(Cursor cursor){
+        if(cursor == null && !cursor.moveToFirst()){
+            return null;
+        }
+
+        int cursorCount = cursor.getCount();
+        Event[] events = new Event[cursorCount];
+        int eventCount = 0;
+        while(cursor.moveToNext()){
+            events[eventCount] = new Event();
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                String columnName = cursor.getColumnName(i);
+                String data = cursor.getString(i);
+
+                if(data != null && !"".equals(data)) {
+                    switch (columnName) {
+                        case CalendarContract.Events.DESCRIPTION:
+                            events[eventCount].setDescription(data);
+                            break;
+                        case CalendarContract.Events.TITLE:
+                            events[eventCount].setTitle(data);
+                            break;
+                        case CalendarContract.Events.DTSTART:
+                            events[eventCount].setStartTime(new Date(Long.parseLong(data)));
+                            break;
+                        case CalendarContract.Events.DTEND:
+                            events[eventCount].setStopTime(new Date(Long.parseLong(data)));
+                            break;
+                    }
+                }
+            }
+            eventCount++;
+        } while (cursor.moveToNext());
+
+        return events;
     }
 }

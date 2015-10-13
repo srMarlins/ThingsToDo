@@ -20,4 +20,12 @@ public class EventCalendar {
     public String getName(){
         return mName;
     }
+
+    public void setId(long id){
+        mId = id;
+    }
+
+    public void setName(String name){
+        mName = name;
+    }
 }
