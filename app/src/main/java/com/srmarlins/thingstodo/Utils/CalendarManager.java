@@ -10,6 +10,7 @@ import android.provider.CalendarContract;
 import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Models.EventCalendar;
+import com.srmarlins.thingstodo.SQLite.QueryCompletionListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class CalendarManager {
         return cals;
     }
 
-    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, AsyncCalendarQuery.QueryCompletionListener listener){
+    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, QueryCompletionListener listener){
         AsyncCalendarQuery asyncCalendarQuery = new AsyncCalendarQuery(mContentResolver);
         long calendarId = calendar.getId();
         Uri calendarUri = Uri.parse(EVENT_URI);
@@ -86,14 +87,14 @@ public class CalendarManager {
     }
 
     public Event[] parseEventResultCursor(Cursor cursor){
-        if(cursor == null && !cursor.moveToFirst()){
+        if(cursor == null || !cursor.moveToFirst()){
             return null;
         }
 
         int cursorCount = cursor.getCount();
         Event[] events = new Event[cursorCount];
         int eventCount = 0;
-        while(cursor.moveToNext()){
+        do{
             events[eventCount] = new Event();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 String columnName = cursor.getColumnName(i);
@@ -117,7 +118,7 @@ public class CalendarManager {
                 }
             }
             eventCount++;
-        } while (cursor.moveToNext());
+        }while(cursor.moveToNext());
 
         return events;
     }
