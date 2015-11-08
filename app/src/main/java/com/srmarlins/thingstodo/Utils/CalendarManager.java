@@ -10,6 +10,7 @@ import android.provider.CalendarContract;
 import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Models.EventCalendar;
+import com.srmarlins.thingstodo.SQLite.QueryCompletionListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class CalendarManager {
         return cals;
     }
 
-    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, AsyncCalendarQuery.QueryCompletionListener listener){
+    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, QueryCompletionListener listener){
         AsyncCalendarQuery asyncCalendarQuery = new AsyncCalendarQuery(mContentResolver);
         long calendarId = calendar.getId();
         Uri calendarUri = Uri.parse(EVENT_URI);
@@ -117,7 +118,7 @@ public class CalendarManager {
                 }
             }
             eventCount++;
-        } while (cursor.moveToNext());
+        }
 
         return events;
     }
