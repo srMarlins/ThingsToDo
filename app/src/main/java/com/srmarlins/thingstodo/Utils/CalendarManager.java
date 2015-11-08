@@ -87,14 +87,14 @@ public class CalendarManager {
     }
 
     public Event[] parseEventResultCursor(Cursor cursor){
-        if(cursor == null && !cursor.moveToFirst()){
+        if(cursor == null || !cursor.moveToFirst()){
             return null;
         }
 
         int cursorCount = cursor.getCount();
         Event[] events = new Event[cursorCount];
         int eventCount = 0;
-        while(cursor.moveToNext()){
+        do{
             events[eventCount] = new Event();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 String columnName = cursor.getColumnName(i);
@@ -118,7 +118,7 @@ public class CalendarManager {
                 }
             }
             eventCount++;
-        }
+        }while(cursor.moveToNext());
 
         return events;
     }

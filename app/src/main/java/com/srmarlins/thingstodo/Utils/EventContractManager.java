@@ -82,7 +82,7 @@ public class EventContractManager {
 
     public HashMap<String, Event> retrieveAllEvents(){
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
-        String query = "SELECT  * FROM " + EventContract.EventEntry.TABLE_NAME;
+        String query = "SELECT * FROM " + EventContract.EventEntry.TABLE_NAME;
 
         Cursor cursor = eventDb.rawQuery(query, null);
 
@@ -93,7 +93,7 @@ public class EventContractManager {
         HashMap<String, Event> map = new HashMap<>();
 
         cursor.moveToFirst();
-        while(cursor.moveToNext()){
+        do{
             Event event = new Event();
             event.setSeid(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.EVENT_ID)));
             event.setStartTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.START_DATE))));
@@ -101,7 +101,7 @@ public class EventContractManager {
             event.setTitle(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.TITLE)));
             event.setDescription(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.DESCRIPTION)));
             map.put(event.getSeid(), event);
-        }
+        }while(cursor.moveToNext());
 
         return map;
     }
