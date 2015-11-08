@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.srmarlins.thingstodo.SQLite.QueryCompletionListener;
+
 /**
  * Created by jfowler on 9/15/15.
  */
@@ -32,9 +34,5 @@ public class AsyncCalendarQuery extends AsyncQueryHandler {
     public void startQuery(int token, Object cookie, Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy, QueryCompletionListener listener) {
         mQueryCompletionListener = listener;
         super.startQuery(token, cookie, uri, projection, selection, selectionArgs, orderBy);
-    }
-
-    public interface QueryCompletionListener{
-        public void onComplete(Cursor result);
     }
 }
