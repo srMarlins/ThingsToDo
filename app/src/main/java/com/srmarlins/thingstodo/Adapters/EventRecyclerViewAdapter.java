@@ -5,16 +5,14 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
@@ -59,14 +57,13 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.date.setText(formatDate(event));
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
-        holder.description.setText(event.getDescription());
         holder.layout.setBackgroundColor(Color.WHITE);
     }
 
     public String formatDate(Event event){
         String dateString = "";
         DateFormat oldF = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        DateFormat newF = new SimpleDateFormat("MMMM dd, ''yy");
+        DateFormat newF = new SimpleDateFormat("EEE, MMM dd, h:mm a");
 
         try {
             if (event.getStartTime().compareTo(java.util.Calendar.getInstance().getTime()) >= 0) {
@@ -80,7 +77,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             e.printStackTrace();
         }
 
-        return dateString;
+        return dateString.toUpperCase();
     }
 
     @Override
@@ -107,21 +104,19 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
         private static final float COLOR_THRESHOLD = 280.0f;
         public View mView;
-        public RoundedImageView logo;
+        public ImageView logo;
         public TextView title;
         public TextView date;
         public TextView location;
-        public TextView description;
         public LinearLayout layout;
 
         public ViewHolder(View cardView) {
             super(cardView);
             mView = cardView;
-            this.logo = (RoundedImageView) mView.findViewById(R.id.event_image);
+            this.logo = (ImageView) mView.findViewById(R.id.event_image);
             this.title = (TextView) mView.findViewById(R.id.txtTitle);
             this.date = (TextView) mView.findViewById(R.id.txtDate);
             this.location = (TextView) mView.findViewById(R.id.txtLoc);
-            this.description = (TextView) mView.findViewById(R.id.txtDesc);
             this.layout = (LinearLayout) mView.findViewById(R.id.card_view_layout);
         }
 

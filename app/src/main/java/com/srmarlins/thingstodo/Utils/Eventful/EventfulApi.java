@@ -49,6 +49,7 @@ public class EventfulApi {
         mSearchRequest.setLocation(String.format("%s,%s", location.getLatitude(), location.getLongitude()));
         mSearchRequest.setPageSize(NUM_RESULTS);
         mSearchRequest.setPageNumber(pageNum);
+        mSearchRequest.setImageSizes("medium,large");
         return mSearchRequest;
     }
 
