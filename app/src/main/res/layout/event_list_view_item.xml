@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:gravity="center"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_gravity="center"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         card_view:cardCornerRadius="4dp"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardElevation="4dp">
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true">
 
         <LinearLayout
+            android:id="@+id/card_view_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:background="@android:color/white"
-            android:id="@+id/card_view_layout"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,31 +29,32 @@
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/event_image"
-                    android:src="@android:drawable/ic_menu_today"
-                    android:scaleType="fitCenter"
-                    app:riv_corner_radius="30dip"
-                    app:riv_border_width="2dip"
-                    app:riv_border_color="@color/primary"
-                    app:riv_mutate_background="true"
-                    app:riv_oval="true"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp"
+                    android:scaleType="fitCenter"
+                    android:src="@android:drawable/ic_menu_today"
+                    app:riv_border_color="@color/primary"
+                    app:riv_border_width="2dip"
+                    app:riv_corner_radius="30dip"
+                    app:riv_mutate_background="true"
+                    app:riv_oval="true"/>
 
 
                 <TextView
+                    android:id="@+id/txtTitle"
+                    style="@style/CardViewText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="28sp"
-                    android:paddingLeft="3dp"
-                    android:text="This is some test text and stuff"
-                    android:gravity="center"
-                    android:singleLine="true"
                     android:ellipsize="end"
-                    android:id="@+id/txtTitle"/>
+                    android:gravity="center"
+                    android:paddingLeft="3dp"
+                    android:singleLine="true"
+                    android:text="This is some test text and stuff"
+                    android:textSize="28sp"/>
 
-                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,56 +63,59 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/txtDate"
+                    style="@style/CardViewText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
                     android:text="September 5th, 2015"
-                    android:id="@+id/txtDate"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="|"
-                    android:layout_gravity="left"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
                     android:textSize="15sp"/>
 
                 <TextView
+                    style="@style/CardViewText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:text="Sunnyvale, CA"
-                    android:id="@+id/txtLoc"/>
+                    android:layout_gravity="left"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="|"
+                    android:textSize="15sp"/>
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtLoc"
+                    style="@style/CardViewText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sunnyvale, CA"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
 
             <View
-                android:layout_height="3dp"
                 android:layout_width="match_parent"
-                android:background="@color/primary"
-                android:padding="30dp"
+                android:layout_height="3dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:background="@color/primary"
+                android:padding="30dp"/>
 
             <TextView
+                android:id="@+id/txtDesc"
+                style="@style/CardViewText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:maxLines = "5"
-                android:ellipsize="end"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="5"
                 android:text="SCU Presents Festival of Lights at 7:30 p.m. at Santa Clara Mission Church. Performance by Concert Choir and Chamber Singers. Tickets: $5.00 - $15.00. For tickets and information, call (408) 554-4015 or visit the website below. More Information: SCU Presents"
-                android:id="@+id/txtDesc"/>
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 
 </RelativeLayout>
