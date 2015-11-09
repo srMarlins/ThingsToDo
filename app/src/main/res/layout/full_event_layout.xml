@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center_horizontal"
@@ -14,17 +15,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:layout_marginTop="5dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/txtDate"
             style="@style/FullEventText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monday, September 23rd, 7:00 pm"
             android:layout_gravity="start"
+            android:text="Monday, September 23rd, 7:00 pm"
             android:textSize="12sp"/>
 
 
@@ -33,8 +34,8 @@
             style="@style/FullEventText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sunnyvale, CA"
             android:layout_gravity="end"
+            android:text="Sunnyvale, CA"
             android:textSize="12sp"/>
 
     </LinearLayout>
@@ -44,33 +45,57 @@
         style="@style/FullEventText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginTop="5dp"
         android:ellipsize="end"
+        android:gravity="center"
         android:text="This is some test text and stuff and this is a really long title"
         android:textSize="25sp"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/txtDesc"
+        style="@style/DescriptionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/DescriptionText"
         android:maxLines="5"
         android:text="This is a rela yr asdfakdfj asdf;a fjlkasdfjasd; klfa sdfhasdjklf asdfhkjdf alkjsdfh asdlkfjhads fkjlasdhflakjsdhfasdkjfh sldfhjkd fkljasd fhkjasdhfkjsdh fklajshfaslkhweoin wkl c sdj dj dj jf skdjs kdjsdkjs d djks djwoidj wo ds jdksjdi widj wiodj sdj si jdks jdk jdks jdiw odjwod jwsd sjod sjod"/>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/fabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnFabDecline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:id="@+id/btnFabDecline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            android:src="@drawable/ic_remove_white_48dp"
+            app:backgroundTint="@color/card_decline"
+            app:borderWidth="0dp"
+            app:elevation="2dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/fabLayout"
+            app:layout_anchorGravity="bottom|left|start"
+            app:rippleColor="@color/primary_dark"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btnFabAccept"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginRight="75dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_add_white_48dp"
+            app:backgroundTint="@color/card_accept"
+            app:borderWidth="0dp"
+            app:elevation="2dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/fabLayout"
+            app:layout_anchorGravity="bottom|right|end"
+            app:rippleColor="@color/primary_dark"/>
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
