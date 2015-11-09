@@ -4,7 +4,6 @@ package com.srmarlins.thingstodo.Fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,17 +11,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.srmarlins.eventful_android.data.Event;
-import com.srmarlins.eventful_android.data.SearchResult;
-import com.srmarlins.eventful_android.data.request.EventSearchRequest;
 import com.srmarlins.thingstodo.Adapters.CardSwipeHelper;
 import com.srmarlins.thingstodo.Adapters.EventRecyclerViewAdapter;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
-import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
-import com.srmarlins.thingstodo.Utils.LocationManager;
 
 import java.util.ArrayList;
 
