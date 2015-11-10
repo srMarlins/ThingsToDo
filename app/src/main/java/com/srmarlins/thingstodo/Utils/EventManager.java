@@ -25,6 +25,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     public static final int DEFAULT_CALENDAR_NUM = 0;
     public static final String[] PROJECTION = new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION};
 
+    private static EventManager mEventManager;
     private ArrayList<Event> mCurrentEvents;
     private ArrayList<Event> mDeclinedEvents;
     private ArrayList<Event> mAcceptedEvents;
@@ -49,6 +50,11 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mCalendar = new CalendarManager(context);
         mEcManager = new EventContractManager(context);
         buildEvents();
+        mEventManager = this;
+    }
+
+    public static EventManager getInstance(){
+        return mEventManager;
     }
 
     public void buildEvents(){
@@ -158,6 +164,27 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mCurrentEvents.remove(event);
         mAcceptedEvents.add(event);
         mListener.onEventsChanged(mCurrentEvents);
+    }
+
+    public ArrayList<Event> getAcceptedEvents(){
+        return mAcceptedEvents;
+    }
+
+    public ArrayList<Event> getDeclinedEvents(){
+        return mDeclinedEvents;
+    }
+
+    public ArrayList<Event> getCurrentEvents(){
+        return mCurrentEvents;
+    }
+
+    public static Event findEventById(String id, ArrayList<Event> events){
+        for(Event event : events){
+            if(event.getSeid().equals(id)){
+                return event;
+            }
+        }
+        return null;
     }
 
     @Override

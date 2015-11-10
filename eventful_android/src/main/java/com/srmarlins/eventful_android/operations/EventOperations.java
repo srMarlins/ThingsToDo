@@ -62,6 +62,7 @@ public class EventOperations extends BaseOperations {
         params.put("keywords", searchRequest.getKeywords());
         params.put("include", searchRequest.getIncludes());
         params.put("location", searchRequest.getLocation());
+        params.put("image_sizes", searchRequest.getImageSizes());
         params.put("date", searchRequest.getDateRange());
         params.put("category", searchRequest.getCategory());
         params.put("within", String.valueOf(searchRequest.getLocationRadius()));
