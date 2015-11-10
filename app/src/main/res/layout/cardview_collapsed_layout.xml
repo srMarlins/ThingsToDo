@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/card_view_layout"
+              android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/event_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/txtDate"
+        style="@style/CardViewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Monday, September 23rd, 7:00 pm"
+        android:textSize="10sp"/>
+
+    <TextView
+        android:id="@+id/txtTitle"
+        style="@style/CardViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="This is some test text and stuff and this is a really long title"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtLoc"
+        style="@style/CardViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sunnyvale, CA"
+        android:textColor="@color/primary"
+        android:textSize="12sp"
+        android:layout_marginBottom="3dp"/>
+
+
+</LinearLayout>

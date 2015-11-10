@@ -4,6 +4,7 @@ public abstract class SearchRequest {
     private String keywords;
     private String includes;
     private String location;
+    private String imageSizes;
     private int locationRadius;
     private int changemultidaystart = 0;
     private String locationUnits = "mi";
@@ -109,6 +110,14 @@ public abstract class SearchRequest {
 
     public void setSortDirection(SearchRequest.SortDirection sortDirection) {
         this.sortDirection = sortDirection;
+    }
+
+    public String getImageSizes() {
+        return imageSizes;
+    }
+
+    public void setImageSizes(String imageSizes) {
+        this.imageSizes = imageSizes;
     }
 
     public static enum SortDirection {

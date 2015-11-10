@@ -92,7 +92,10 @@ public class EventContractManager {
     public static HashMap<String, Event> cursorToEvents(Cursor cursor){
         HashMap<String, Event> map = new HashMap<>();
 
-        cursor.moveToFirst();
+        if(!cursor.moveToFirst()){
+            return map;
+        }
+
         do{
             Event event = new Event();
             event.setSeid(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.EVENT_ID)));
