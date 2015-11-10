@@ -1,7 +1,6 @@
 package com.srmarlins.thingstodo.Activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -10,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
@@ -40,7 +41,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         TextView dateText = (TextView) findViewById(R.id.txtDate);
         TextView locationText = (TextView) findViewById(R.id.txtLoc);
         TextView descriptionText = (TextView) findViewById(R.id.txtDesc);
-        FloatingActionButton fabAccept = (FloatingActionButton) findViewById(R.id.btnFabAccept);
+        AddFloatingActionButton fabAccept = (AddFloatingActionButton) findViewById(R.id.btnFabAccept);
         FloatingActionButton fabDecline = (FloatingActionButton) findViewById(R.id.btnFabDecline);
 
         Glide.with(this).load(event.getImages().get(event.getImages().size() - 1).getUrl()).into(eventImage);
