@@ -55,7 +55,7 @@ public class CalendarManager {
     }
 
     public EventCalendar[] getCalendars() {
-        String projection[] = {"_id", "calendar_displayName"};
+        String projection[] = {"_id", "calendar_displayName", "calendar_color"};
         Uri calendars;
         calendars = Uri.parse(CALENDAR_URI);
 
@@ -64,13 +64,18 @@ public class CalendarManager {
         if (managedCursor.moveToFirst()){
             long calID;
             String calName;
+            int calColor;
+
             int cont= 0;
             int idCol = managedCursor.getColumnIndex(projection[0]);
             int nameCol = managedCursor.getColumnIndex(projection[1]);
+            int colorCol = managedCursor.getColumnIndex(projection[2]);
             do {
                 calID = managedCursor.getLong(idCol);
                 calName = managedCursor.getString(nameCol);
-                cals[cont] = new EventCalendar(calID, calName);
+                calColor = managedCursor.getInt(colorCol);
+
+                cals[cont] = new EventCalendar(calID, calName, calColor);
                 cont++;
             } while(managedCursor.moveToNext());
             managedCursor.close();

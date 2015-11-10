@@ -3,6 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:fab="http://schemas.android.com/tools"
               android:gravity="center_horizontal"
               android:orientation="vertical">
 
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
+        android:maxLines="2"
         android:gravity="center"
         android:text="This is some test text and stuff and this is a really long title"
         android:textSize="25sp"
@@ -60,42 +62,34 @@
         android:maxLines="5"
         android:text="This is a rela yr asdfakdfj asdf;a fjlkasdfjasd; klfa sdfhasdjklf asdfhkjdf alkjsdfh asdlkfjhads fkjlasdhflakjsdhfasdkjfh sldfhjkd fkljasd fhkjasdhfkjsdh fklajshfaslkhweoin wkl c sdj dj dj jf skdjs kdjsdkjs d djks djwoidj wo ds jdksjdi widj wiodj sdj si jdks jdk jdks jdiw odjwod jwsd sjod sjod"/>
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:id="@+id/fabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
-        <android.support.design.widget.FloatingActionButton
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnFabDecline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="75dp"
-            android:src="@drawable/ic_remove_white_48dp"
-            app:backgroundTint="@color/card_decline"
-            app:borderWidth="0dp"
-            app:elevation="2dp"
-            app:fabSize="normal"
-            app:layout_anchor="@id/fabLayout"
-            app:layout_anchorGravity="bottom|left|start"
-            app:rippleColor="@color/primary_dark"/>
+            app:fab_icon="@drawable/ic_remove_white_48dp"
+            app:fab_colorNormal="@color/card_decline"
+            app:fab_colorPressed="@color/primary_dark"
+            android:layout_marginEnd="75dp"/>
 
-        <android.support.design.widget.FloatingActionButton
+
+        <com.getbase.floatingactionbutton.AddFloatingActionButton
             android:id="@+id/btnFabAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="75dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_add_white_48dp"
-            app:backgroundTint="@color/card_accept"
-            app:borderWidth="0dp"
-            app:elevation="2dp"
-            app:fabSize="normal"
-            app:layout_anchor="@id/fabLayout"
-            app:layout_anchorGravity="bottom|right|end"
-            app:rippleColor="@color/primary_dark"/>
+            app:fab_icon="@drawable/ic_add_white_48dp"
+            app:fab_colorNormal="@color/card_accept"
+            app:fab_colorPressed="@color/primary_dark"
+            app:layout_anchorGravity="end"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 
 </LinearLayout>
