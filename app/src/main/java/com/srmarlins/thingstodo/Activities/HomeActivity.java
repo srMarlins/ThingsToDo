@@ -2,6 +2,7 @@ package com.srmarlins.thingstodo.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
 import com.srmarlins.thingstodo.R;
@@ -19,13 +20,16 @@ public class HomeActivity extends AppCompatActivity {
 
         CalendarManager calendarManager = new CalendarManager(this);
         mNavUtil = NavigationDrawerUtil.getInstance(this);
+        mNavUtil.setupNavDrawer(this, savedInstanceState);
         mNavUtil.addCalendars(calendarManager.getCalendars());
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
                 .commit();
-
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

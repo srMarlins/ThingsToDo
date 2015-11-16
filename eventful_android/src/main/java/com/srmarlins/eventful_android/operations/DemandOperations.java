@@ -42,8 +42,7 @@ public class DemandOperations extends BaseOperations {
         HashMap params = new HashMap();
         params.put("id", sdid);
         InputStream is = this.serverCommunication.invokeMethod("/demands/get", params);
-        Demand v = (Demand) this.unmarshallRequest(Demand.class, is);
-        return v;
+        return  (Demand) this.unmarshallRequest(Demand.class, is);
     }
 
     public Demand create(Demand d) throws EVDBRuntimeException, EVDBAPIException {

@@ -33,14 +33,14 @@ public class EventSearchRequest extends SearchRequest {
         this.sortOrder = sortOrder;
     }
 
-    public static enum SortOrder {
+    public enum SortOrder {
         RELEVANCE,
         DATE,
         TITLE,
         VENUE_NAME,
         DISTANCE;
 
-        private SortOrder() {
+        SortOrder() {
         }
     }
 }

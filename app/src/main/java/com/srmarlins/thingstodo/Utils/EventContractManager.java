@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Models.Query;
@@ -23,16 +22,36 @@ public class EventContractManager {
 
     private static EventDbHelper mEventDb;
 
-    public EventContractManager(Context context){
+    public EventContractManager(Context context) {
         mEventDb = new EventDbHelper(context);
     }
 
-    public void insertEvent(Event event, long calendarId){
+    public static HashMap<String, Event> cursorToEvents(Cursor cursor) {
+        HashMap<String, Event> map = new HashMap<>();
+
+        if (!cursor.moveToFirst()) {
+            return map;
+        }
+
+        do {
+            Event event = new Event();
+            event.setSeid(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.EVENT_ID)));
+            event.setStartTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.START_DATE))));
+            event.setStopTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.END_DATE))));
+            event.setTitle(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.TITLE)));
+            event.setDescription(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.DESCRIPTION)));
+            map.put(event.getSeid(), event);
+        } while (cursor.moveToNext());
+
+        return map;
+    }
+
+    public void insertEvent(Event event, long calendarId) {
         final SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
         AsyncTask<Query, Void, Void> async = new AsyncTask<Query, Void, Void>() {
             @Override
             protected Void doInBackground(Query... params) {
-                for(Query query : params){
+                for (Query query : params) {
                     long code = eventDb.insert(query.table, null, query.values);
                 }
                 return null;
@@ -44,7 +63,7 @@ public class EventContractManager {
         Date start = event.getStartTime();
         Date end = event.getStopTime();
 
-        if(start == null){
+        if (start == null) {
             return;
         }
 
@@ -65,12 +84,12 @@ public class EventContractManager {
         async.execute(query);
     }
 
-    public void deleteEvent(Event event){
+    public void deleteEvent(Event event) {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
         eventDb.delete(EventContract.EventEntry.TABLE_NAME, EventContract.EventEntry.EVENT_ID + "=" + event.getSeid(), null);
     }
 
-    public Event retrieveEvent(String eventId){
+    public Event retrieveEvent(String eventId) {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
         String query = "SELECT  * FROM " + EventContract.EventEntry.TABLE_NAME + " WHERE "
                 + EventContract.EventEntry.EVENT_ID + " = " + eventId;
@@ -80,32 +99,12 @@ public class EventContractManager {
         return cursorToEvents(cursor).get(eventId);
     }
 
-    public HashMap<String, Event> retrieveAllEvents(){
+    public HashMap<String, Event> retrieveAllEvents() {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
         String query = "SELECT * FROM " + EventContract.EventEntry.TABLE_NAME;
 
         Cursor cursor = eventDb.rawQuery(query, null);
 
         return cursorToEvents(cursor);
-    }
-
-    public static HashMap<String, Event> cursorToEvents(Cursor cursor){
-        HashMap<String, Event> map = new HashMap<>();
-
-        if(!cursor.moveToFirst()){
-            return map;
-        }
-
-        do{
-            Event event = new Event();
-            event.setSeid(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.EVENT_ID)));
-            event.setStartTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.START_DATE))));
-            event.setStopTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.END_DATE))));
-            event.setTitle(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.TITLE)));
-            event.setDescription(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.DESCRIPTION)));
-            map.put(event.getSeid(), event);
-        }while(cursor.moveToNext());
-
-        return map;
     }
 }

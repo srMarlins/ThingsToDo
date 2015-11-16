@@ -26,17 +26,11 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
     private Context mContext;
     private LastLocationListener mListener;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
 
     protected LocationManager(Context context, LastLocationListener listener) {
         mContext = context;
         mListener = listener;
         initGoogleApiClient();
-    }
-
-    public void initGoogleApiClient(){
-        buildGoogleApiClient();
-        mGoogleApiClient.connect();
     }
 
     public static LocationManager getInstance(Context context, LastLocationListener listener) {
@@ -45,11 +39,16 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
         }
         if (mManagerInstance == null) {
             mManagerInstance = new LocationManager(context, listener);
-        }else{
+        } else {
             mManagerInstance.initGoogleApiClient();
             mManagerInstance.setListener(listener);
         }
         return mManagerInstance;
+    }
+
+    public void initGoogleApiClient() {
+        buildGoogleApiClient();
+        mGoogleApiClient.connect();
     }
 
     private synchronized void buildGoogleApiClient() {
@@ -60,16 +59,16 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
                 .build();
     }
 
-    public void setListener(LastLocationListener listener){
+    public void setListener(LastLocationListener listener) {
         mListener = listener;
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLastLocation = getLastKnownLocation();
+        Location mLastLocation = getLastKnownLocation();
         if (mLastLocation != null) {
             mListener.onLocationReceived(mLastLocation);
-        }else{
+        } else {
             mListener.onLocationNotReceived();
         }
     }
@@ -82,7 +81,7 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
             Location l = null;
             try {
                 l = lm.getLastKnownLocation(provider);
-            }catch (SecurityException e){
+            } catch (SecurityException e) {
                 e.printStackTrace();
             }
 
@@ -109,8 +108,9 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
         Log.i("d", connectionResult.toString());
     }
 
-    public interface LastLocationListener{
+    public interface LastLocationListener {
         void onLocationReceived(Location location);
+
         void onLocationNotReceived();
     }
 }

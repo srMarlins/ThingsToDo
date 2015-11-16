@@ -53,8 +53,7 @@ public class EventOperations extends BaseOperations {
         HashMap params = new HashMap();
         params.put("id", seid);
         InputStream is = this.serverCommunication.invokeMethod("/events/get", params);
-        Event e = (Event) this.unmarshallRequest(Event.class, is);
-        return e;
+        return (Event) this.unmarshallRequest(Event.class, is);
     }
 
     public SearchResult search(EventSearchRequest searchRequest) throws EVDBRuntimeException, EVDBAPIException {

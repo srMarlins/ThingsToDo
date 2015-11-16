@@ -5,102 +5,93 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/card_view_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/event_image"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_today"
+            app:riv_border_color="@color/primary"
+            app:riv_border_width="2dip"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"/>
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/event_image"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_today"
-                app:riv_border_color="@color/primary"
-                app:riv_border_width="2dip"
-                app:riv_corner_radius="30dip"
-                app:riv_mutate_background="true"
-                app:riv_oval="true"/>
-
-
-            <TextView
-                android:id="@+id/txtTitle"
-                style="@style/CardViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:paddingLeft="3dp"
-                android:singleLine="true"
-                android:text="This is some test text and stuff"
-                android:textSize="28sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtDate"
-                style="@style/CardViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="September 5th, 2015"
-                android:textSize="15sp"/>
-
-            <TextView
-                style="@style/CardViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:text="|"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/txtLoc"
-                style="@style/CardViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sunnyvale, CA"
-                android:textSize="15sp"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/primary"
-            android:padding="30dp"/>
 
         <TextView
-            android:id="@+id/txtDesc"
+            android:id="@+id/txtTitle"
+            style="@style/CardViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:singleLine="true"
+            android:text="This is some test text and stuff"
+            android:textSize="28sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDate"
             style="@style/CardViewText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="5"
-            android:text="SCU Presents Festival of Lights at 7:30 p.m. at Santa Clara Mission Church. Performance by Concert Choir and Chamber Singers. Tickets: $5.00 - $15.00. For tickets and information, call (408) 554-4015 or visit the website below. More Information: SCU Presents"
+            android:text="September 5th, 2015"
+            android:textSize="15sp"/>
+
+        <TextView
+            style="@style/CardViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="|"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/txtLoc"
+            style="@style/CardViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sunnyvale, CA"
             android:textSize="15sp"/>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/primary"
+        android:padding="30dp"/>
+
+    <TextView
+        android:id="@+id/txtDesc"
+        style="@style/CardViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="5"
+        android:text="SCU Presents Festival of Lights at 7:30 p.m. at Santa Clara Mission Church. Performance by Concert Choir and Chamber Singers. Tickets: $5.00 - $15.00. For tickets and information, call (408) 554-4015 or visit the website below. More Information: SCU Presents"
+        android:textSize="15sp"/>
 
 </LinearLayout>

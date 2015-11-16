@@ -1,24 +1,30 @@
 package com.srmarlins.thingstodo.Utils;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.CompoundButton;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.srmarlins.thingstodo.Fragments.AcceptedEventsFragment;
+import com.srmarlins.thingstodo.Fragments.DeclinedEventsFragment;
+import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.R;
 
@@ -30,19 +36,17 @@ public class NavigationDrawerUtil {
     private static NavigationDrawerUtil mNdUtil;
 
     private Drawer mNavDrawer;
+    private SharedPreferences mPrefs;
 
-    public static NavigationDrawerUtil getInstance(AppCompatActivity context){
-        if(mNdUtil == null){
+    public static NavigationDrawerUtil getInstance(AppCompatActivity context) {
+        if (mNdUtil == null) {
             mNdUtil = new NavigationDrawerUtil();
-            mNdUtil.setupNavDrawer(context);
-        }else if(mNdUtil.mNavDrawer == null){
-            mNdUtil.setupNavDrawer(context);
+            mNdUtil.mPrefs = context.getPreferences(Context.MODE_PRIVATE);
         }
-
         return mNdUtil;
     }
 
-    private AccountHeader setupNavDrawerHeader(AppCompatActivity context){
+    private AccountHeader setupNavDrawerHeader(AppCompatActivity context) {
         return new AccountHeaderBuilder()
                 .withActivity(context)
                 .withHeaderBackground(R.drawable.nav_drawer_background)
@@ -50,7 +54,7 @@ public class NavigationDrawerUtil {
                 .build();
     }
 
-    private void setupNavDrawer(final AppCompatActivity context){
+    public void setupNavDrawer(final AppCompatActivity context, Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
         context.setSupportActionBar(toolbar);
 
@@ -60,30 +64,49 @@ public class NavigationDrawerUtil {
                 .withAccountHeader(setupNavDrawerHeader(context))
                 .withTranslucentStatusBar(false)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home").withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(FontAwesome.Icon.faw_gear),
-                        new SectionDrawerItem().withDivider(true).withName("Events"),
-                        new SecondaryDrawerItem().withName("Accepted").withIcon(FontAwesome.Icon.faw_check),
-                        new SecondaryDrawerItem().withName("Declined").withIcon(FontAwesome.Icon.faw_close),
-                        new SectionDrawerItem().withDivider(true).withName("Calendars")
+                        new PrimaryDrawerItem().withName(R.string.nav_drawer_home).withIcon(FontAwesome.Icon.faw_home),
+                        new PrimaryDrawerItem().withName(R.string.nav_drawer_settings).withIcon(FontAwesome.Icon.faw_gear),
+                        new SectionDrawerItem().withDivider(true).withName(R.string.nav_drawer_events),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_accepted).withIcon(FontAwesome.Icon.faw_check),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_declined).withIcon(FontAwesome.Icon.faw_close),
+                        new SectionDrawerItem().withDivider(true).withName(R.string.nav_drawer_calendars)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem instanceof Nameable) {
-                            Toast.makeText(context, ((Nameable) drawerItem).getName().getText(context), Toast.LENGTH_SHORT).show();
+                        switch (position) {
+                            //These numbers correspond to the order in which the drawer items are added
+                            case 1:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
+                                        .commit();
+                                break;
+                            case 2: //TODO - Settings
+                                break;
+                            case 4:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, AcceptedEventsFragment.newInstance(), AcceptedEventsFragment.TAG)
+                                        .commit();
+                                break;
+                            case 5:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, DeclinedEventsFragment.newInstance(), DeclinedEventsFragment.TAG)
+                                        .commit();
+                                break;
                         }
-
                         return false;
                     }
-                }).build();
+                })
+                .withShowDrawerOnFirstLaunch(true)
+                .withSavedInstance(savedInstanceState)
+                .build();
 
         context.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mNavDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
 
-    public void addCalendars(EventCalendar[] calendars){
-        for(EventCalendar calendar : calendars){
+    public void addCalendars(EventCalendar[] calendars) {
+        for (final EventCalendar calendar : calendars) {
             ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
             int x = 0;
             int y = 0;
@@ -96,7 +119,34 @@ public class NavigationDrawerUtil {
             drawable.setIntrinsicHeight(height);
             drawable.getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
 
-            mNavDrawer.addItem(new SecondaryDrawerItem().withName(calendar.getName()).withIcon(drawable));
+            SecondarySwitchDrawerItem item = new SecondarySwitchDrawerItem()
+                    .withName(calendar.getName())
+                    .withIcon(drawable)
+                    .withOnCheckedChangeListener(new OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                            EventManager eventManager = EventManager.getInstance();
+                            if (isChecked) {
+                                eventManager.addCalendar(calendar);
+                            } else {
+                                eventManager.removeCalendar(calendar);
+                            }
+                            writeCalendarSelectedToPrefs(calendar, isChecked);
+                        }
+                    })
+                    .withSelectable(false)
+                    .withChecked(wasCalendarSelected(calendar));
+
+            mNavDrawer.addItem(item);
         }
+    }
+
+    private boolean wasCalendarSelected(EventCalendar calendar) {
+        return mPrefs.getBoolean(calendar.getName(), false);
+    }
+
+    private boolean writeCalendarSelectedToPrefs(EventCalendar calendar, boolean selected) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        return editor.putBoolean(calendar.getName(), selected).commit();
     }
 }

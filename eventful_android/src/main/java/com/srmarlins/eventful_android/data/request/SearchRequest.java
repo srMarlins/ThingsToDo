@@ -120,11 +120,11 @@ public abstract class SearchRequest {
         this.imageSizes = imageSizes;
     }
 
-    public static enum SortDirection {
+    public enum SortDirection {
         ASCENDING,
         DESCENDING;
 
-        private SortDirection() {
+        SortDirection() {
         }
     }
 }
