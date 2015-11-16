@@ -35,7 +35,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     private EventListener mListener;
     private boolean mLoading = false;
     private CalendarManager mCalendar;
-    private EventCalendar selectedCalendar;
+    private ArrayList<EventCalendar> mSelectedCalendars;
     private EventContractManager mEcManager;
 
     private int mPageCount = 1;
@@ -47,6 +47,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mCurrentEvents = new ArrayList<>();
         mDeclinedEvents = new ArrayList<>();
         mAcceptedEvents = new ArrayList<>();
+        mSelectedCalendars = new ArrayList<>();
         mCalendar = new CalendarManager(context);
         mEcManager = new EventContractManager(context);
         buildEvents();
@@ -59,19 +60,32 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
 
     public void buildEvents(){
         EventCalendar[] calendars = mCalendar.getCalendars();
-        if(calendars != null && calendars.length > 0) {
-            selectedCalendar = mCalendar.getCalendars()[DEFAULT_CALENDAR_NUM];
+        if(calendars != null && calendars.length > 0 && mSelectedCalendars.size() == 0) {
+            mSelectedCalendars.add(mCalendar.getCalendars()[DEFAULT_CALENDAR_NUM]);
+        }
 
-            mCalendar.getEventsFromCalendar(selectedCalendar, PROJECTION, new QueryCompletionListener() {
+        for(EventCalendar calendar : mSelectedCalendars) {
+            mCalendar.getEventsFromCalendar(calendar, PROJECTION, new QueryCompletionListener() {
                 @Override
                 public void onComplete(Cursor result) {
                     mAcceptedEvents.addAll(Arrays.asList(mCalendar.parseEventResultCursor(result)));
                 }
             });
-        }else{
-            //TODO - Display an error message for no calendars
         }
+
         mDeclinedEvents.addAll(mEcManager.retrieveAllEvents().values());
+    }
+
+    public void addCalendar(EventCalendar calendar){
+        mSelectedCalendars.add(calendar);
+    }
+
+    public void removeCalendar(EventCalendar calendar){
+        mSelectedCalendars.remove(calendar);
+    }
+
+    public ArrayList<EventCalendar> getSelectedCalendars(){
+        return mSelectedCalendars;
     }
 
     public void setContext(Context context){
@@ -160,7 +174,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     }
 
     public void acceptEvent(Event event){
-        mCalendar.insertEvent(event, mCalendar.getCalendars()[DEFAULT_CALENDAR_NUM].getId());
+        for(EventCalendar calendar : mSelectedCalendars) {
+            mCalendar.insertEvent(event, calendar.getId());
+        }
         mCurrentEvents.remove(event);
         mAcceptedEvents.add(event);
         mListener.onEventsChanged(mCurrentEvents);

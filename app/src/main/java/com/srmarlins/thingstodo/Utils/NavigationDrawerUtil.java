@@ -1,24 +1,26 @@
 package com.srmarlins.thingstodo.Utils;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.CompoundButton;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.R;
 
@@ -30,11 +32,13 @@ public class NavigationDrawerUtil {
     private static NavigationDrawerUtil mNdUtil;
 
     private Drawer mNavDrawer;
+    private SharedPreferences mPrefs;
 
     public static NavigationDrawerUtil getInstance(AppCompatActivity context){
         if(mNdUtil == null){
             mNdUtil = new NavigationDrawerUtil();
             mNdUtil.setupNavDrawer(context);
+            mNdUtil.mPrefs = context.getPreferences(Context.MODE_PRIVATE);
         }else if(mNdUtil.mNavDrawer == null){
             mNdUtil.setupNavDrawer(context);
         }
@@ -70,10 +74,6 @@ public class NavigationDrawerUtil {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem instanceof Nameable) {
-                            Toast.makeText(context, ((Nameable) drawerItem).getName().getText(context), Toast.LENGTH_SHORT).show();
-                        }
-
                         return false;
                     }
                 }).build();
@@ -83,7 +83,7 @@ public class NavigationDrawerUtil {
     }
 
     public void addCalendars(EventCalendar[] calendars){
-        for(EventCalendar calendar : calendars){
+        for(final EventCalendar calendar : calendars){
             ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
             int x = 0;
             int y = 0;
@@ -96,7 +96,34 @@ public class NavigationDrawerUtil {
             drawable.setIntrinsicHeight(height);
             drawable.getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
 
-            mNavDrawer.addItem(new SecondaryDrawerItem().withName(calendar.getName()).withIcon(drawable));
+            SecondarySwitchDrawerItem item = new SecondarySwitchDrawerItem()
+                    .withName(calendar.getName())
+                    .withIcon(drawable)
+                    .withOnCheckedChangeListener(new OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                            EventManager eventManager = EventManager.getInstance();
+                            if(isChecked){
+                                eventManager.addCalendar(calendar);
+                            }else{
+                                eventManager.removeCalendar(calendar);
+                            }
+                            writeCalendarSelectedToPrefs(calendar, isChecked);
+                        }
+                    })
+                    .withSelectable(false)
+                    .withChecked(wasCalendarSelected(calendar));
+
+            mNavDrawer.addItem(item);
         }
+    }
+
+    private boolean wasCalendarSelected(EventCalendar calendar){
+        return mPrefs.getBoolean(calendar.getName(), false);
+    }
+
+    private boolean writeCalendarSelectedToPrefs(EventCalendar calendar, boolean selected){
+        SharedPreferences.Editor editor = mPrefs.edit();
+        return editor.putBoolean(calendar.getName(), selected).commit();
     }
 }
