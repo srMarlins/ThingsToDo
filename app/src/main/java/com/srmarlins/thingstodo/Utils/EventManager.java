@@ -101,9 +101,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mApi.setContext(context);
     }
 
-    public void loadEvents(int radius) {
+    public boolean loadEvents(int radius) {
         if (mRequestNumber > mPageCount) {
-            return;
+            return false;
         }
 
         mLoading = true;
@@ -115,6 +115,8 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
             mApi.requestEvents(mLocation, mRadius, EventSearchRequest.SortOrder.DATE, mRequestNumber);
             mRequestNumber++;
         }
+
+        return true;
     }
 
     @Override
