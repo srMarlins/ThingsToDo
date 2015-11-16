@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/card_view_layout"
-              android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/card_view_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/event_image"
@@ -36,10 +37,10 @@
         style="@style/CardViewText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
         android:text="Sunnyvale, CA"
         android:textColor="@color/primary"
-        android:textSize="12sp"
-        android:layout_marginBottom="3dp"/>
+        android:textSize="12sp"/>
 
 
 </LinearLayout>

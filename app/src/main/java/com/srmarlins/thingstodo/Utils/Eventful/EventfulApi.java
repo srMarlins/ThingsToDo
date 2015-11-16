@@ -13,35 +13,34 @@ import com.srmarlins.eventful_android.data.request.SearchRequest;
  * Created by jfowler on 9/4/15.
  */
 public class EventfulApi {
-    //TODO - Place this into a secure location
-    private static String EVENTFUL_KEY = "PJVD7NXGr7TKZnSN";
     private static final int NUM_RESULTS = 15;
-
+    //TODO - Place this into a secure location
+    private static final String EVENTFUL_KEY = "PJVD7NXGr7TKZnSN";
     private Context mContext;
     private APIConfiguration mConfig;
     private EventfulResultsListener mListener;
     private EventSearchRequest mSearchRequest;
 
-    public EventfulApi(Context context, EventfulResultsListener listener){
+    public EventfulApi(Context context, EventfulResultsListener listener) {
         mContext = context;
         mConfig = new APIConfiguration();
-        mConfig.setEvdbPassword("");
-        mConfig.setEvdbUser("");
-        mConfig.setApiKey(EVENTFUL_KEY);
+        APIConfiguration.setEvdbPassword("");
+        APIConfiguration.setEvdbUser("");
+        APIConfiguration.setApiKey(EVENTFUL_KEY);
         mListener = listener;
 
     }
 
-    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum){
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum) {
         requestEvents(location, range, order, pageNum, "this weekend");
     }
 
-    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange){
+    public void requestEvents(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange) {
         buildRequest(location, range, order, pageNum, dateRange);
         (new EventfulAsync(mListener)).execute(this);
     }
 
-    private SearchRequest buildRequest(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange){
+    private SearchRequest buildRequest(Location location, int range, EventSearchRequest.SortOrder order, int pageNum, String dateRange) {
         mSearchRequest = new EventSearchRequest();
         mSearchRequest.setDateRange(dateRange);
         mSearchRequest.setSortOrder(order);
@@ -69,12 +68,13 @@ public class EventfulApi {
         return mSearchRequest;
     }
 
-    public void setContext(Context context){
+    public void setContext(Context context) {
         mContext = context;
     }
 
     public interface EventfulResultsListener {
         void onEventfulResults(SearchResult results);
+
         void onEventfulError(Exception e);
     }
 }

@@ -6,7 +6,8 @@ import android.provider.BaseColumns;
  * Created by jfowler on 10/14/15.
  */
 public final class EventContract {
-    public EventContract() {}
+    public EventContract() {
+    }
 
     public static abstract class EventEntry implements BaseColumns {
         public static final String TABLE_NAME = "Declined_Events";

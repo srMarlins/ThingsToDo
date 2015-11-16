@@ -15,13 +15,13 @@ public class VenueSearchRequest extends SearchRequest {
         this.sortOrder = sortOrder;
     }
 
-    public static enum SortOrder {
+    public enum SortOrder {
         RELEVANCE,
         DATE,
         EVENT_COUNT,
         POPULARITY;
 
-        private SortOrder() {
+        SortOrder() {
         }
     }
 }

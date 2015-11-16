@@ -88,7 +88,7 @@ public class Link {
         this.username = username;
     }
 
-    public static enum LinkType {
+    public enum LinkType {
         INFO(1),
         BOX_OFFICE(2),
         NEWS(3),
@@ -105,7 +105,7 @@ public class Link {
 
         private int typeId;
 
-        private LinkType(int typeId) {
+        LinkType(int typeId) {
             this.typeId = typeId;
         }
 

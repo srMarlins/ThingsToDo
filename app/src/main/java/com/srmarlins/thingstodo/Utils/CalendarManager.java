@@ -7,13 +7,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
-import com.srmarlins.eventful_android.data.Calendar;
 import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.SQLite.QueryCompletionListener;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
@@ -29,18 +27,18 @@ public class CalendarManager {
 
     private ContentResolver mContentResolver;
 
-    public CalendarManager(Context context){
+    public CalendarManager(Context context) {
         mContentResolver = context.getContentResolver();
     }
 
-    public void insertEvent(Event event, long calendarId){
+    public void insertEvent(Event event, long calendarId) {
         AsyncCalendarQuery async = new AsyncCalendarQuery(mContentResolver);
         ContentValues values = new ContentValues();
 
         Date start = event.getStartTime();
         Date end = event.getStopTime();
 
-        if(start == null){
+        if (start == null) {
             return;
         }
 
@@ -61,12 +59,12 @@ public class CalendarManager {
 
         Cursor managedCursor = mContentResolver.query(calendars, projection, null, null, null);
         EventCalendar[] cals = new EventCalendar[managedCursor.getCount()];
-        if (managedCursor.moveToFirst()){
+        if (managedCursor.moveToFirst()) {
             long calID;
             String calName;
             int calColor;
 
-            int cont= 0;
+            int cont = 0;
             int idCol = managedCursor.getColumnIndex(projection[0]);
             int nameCol = managedCursor.getColumnIndex(projection[1]);
             int colorCol = managedCursor.getColumnIndex(projection[2]);
@@ -77,13 +75,13 @@ public class CalendarManager {
 
                 cals[cont] = new EventCalendar(calID, calName, calColor);
                 cont++;
-            } while(managedCursor.moveToNext());
+            } while (managedCursor.moveToNext());
             managedCursor.close();
         }
         return cals;
     }
 
-    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, QueryCompletionListener listener){
+    public void getEventsFromCalendar(EventCalendar calendar, String[] fields, QueryCompletionListener listener) {
         AsyncCalendarQuery asyncCalendarQuery = new AsyncCalendarQuery(mContentResolver);
         long calendarId = calendar.getId();
         Uri calendarUri = Uri.parse(EVENT_URI);
@@ -91,21 +89,21 @@ public class CalendarManager {
         asyncCalendarQuery.startQuery(EVENT_QUERY_TOKEN, null, calendarUri, fields, "calendar_id=" + calendarId, null, null, listener);
     }
 
-    public Event[] parseEventResultCursor(Cursor cursor){
-        if(cursor == null || !cursor.moveToFirst()){
+    public Event[] parseEventResultCursor(Cursor cursor) {
+        if (cursor == null || !cursor.moveToFirst()) {
             return null;
         }
 
         int cursorCount = cursor.getCount();
         Event[] events = new Event[cursorCount];
         int eventCount = 0;
-        do{
+        do {
             events[eventCount] = new Event();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 String columnName = cursor.getColumnName(i);
                 String data = cursor.getString(i);
 
-                if(data != null && !"".equals(data)) {
+                if (data != null && !"".equals(data)) {
                     switch (columnName) {
                         case CalendarContract.Events.DESCRIPTION:
                             events[eventCount].setDescription(data);
@@ -123,7 +121,7 @@ public class CalendarManager {
                 }
             }
             eventCount++;
-        }while(cursor.moveToNext());
+        } while (cursor.moveToNext());
 
         return events;
     }

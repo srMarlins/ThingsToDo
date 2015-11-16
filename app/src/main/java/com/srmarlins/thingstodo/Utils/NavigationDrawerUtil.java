@@ -34,19 +34,19 @@ public class NavigationDrawerUtil {
     private Drawer mNavDrawer;
     private SharedPreferences mPrefs;
 
-    public static NavigationDrawerUtil getInstance(AppCompatActivity context){
-        if(mNdUtil == null){
+    public static NavigationDrawerUtil getInstance(AppCompatActivity context) {
+        if (mNdUtil == null) {
             mNdUtil = new NavigationDrawerUtil();
             mNdUtil.setupNavDrawer(context);
             mNdUtil.mPrefs = context.getPreferences(Context.MODE_PRIVATE);
-        }else if(mNdUtil.mNavDrawer == null){
+        } else if (mNdUtil.mNavDrawer == null) {
             mNdUtil.setupNavDrawer(context);
         }
 
         return mNdUtil;
     }
 
-    private AccountHeader setupNavDrawerHeader(AppCompatActivity context){
+    private AccountHeader setupNavDrawerHeader(AppCompatActivity context) {
         return new AccountHeaderBuilder()
                 .withActivity(context)
                 .withHeaderBackground(R.drawable.nav_drawer_background)
@@ -54,7 +54,7 @@ public class NavigationDrawerUtil {
                 .build();
     }
 
-    private void setupNavDrawer(final AppCompatActivity context){
+    private void setupNavDrawer(final AppCompatActivity context) {
         Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
         context.setSupportActionBar(toolbar);
 
@@ -82,8 +82,8 @@ public class NavigationDrawerUtil {
         mNavDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
 
-    public void addCalendars(EventCalendar[] calendars){
-        for(final EventCalendar calendar : calendars){
+    public void addCalendars(EventCalendar[] calendars) {
+        for (final EventCalendar calendar : calendars) {
             ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
             int x = 0;
             int y = 0;
@@ -103,9 +103,9 @@ public class NavigationDrawerUtil {
                         @Override
                         public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
                             EventManager eventManager = EventManager.getInstance();
-                            if(isChecked){
+                            if (isChecked) {
                                 eventManager.addCalendar(calendar);
-                            }else{
+                            } else {
                                 eventManager.removeCalendar(calendar);
                             }
                             writeCalendarSelectedToPrefs(calendar, isChecked);
@@ -118,11 +118,11 @@ public class NavigationDrawerUtil {
         }
     }
 
-    private boolean wasCalendarSelected(EventCalendar calendar){
+    private boolean wasCalendarSelected(EventCalendar calendar) {
         return mPrefs.getBoolean(calendar.getName(), false);
     }
 
-    private boolean writeCalendarSelectedToPrefs(EventCalendar calendar, boolean selected){
+    private boolean writeCalendarSelectedToPrefs(EventCalendar calendar, boolean selected) {
         SharedPreferences.Editor editor = mPrefs.edit();
         return editor.putBoolean(calendar.getName(), selected).commit();
     }

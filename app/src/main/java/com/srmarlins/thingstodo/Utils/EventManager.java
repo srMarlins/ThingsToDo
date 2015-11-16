@@ -20,10 +20,10 @@ import java.util.Iterator;
 /**
  * Created by jfowler on 9/14/15.
  */
-public class EventManager implements EventfulApi.EventfulResultsListener, LocationManager.LastLocationListener{
+public class EventManager implements EventfulApi.EventfulResultsListener, LocationManager.LastLocationListener {
 
     public static final int DEFAULT_CALENDAR_NUM = 0;
-    public static final String[] PROJECTION = new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION};
+    public static final String[] PROJECTION = new String[]{CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION};
 
     private static EventManager mEventManager;
     private ArrayList<Event> mCurrentEvents;
@@ -41,7 +41,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     private int mPageCount = 1;
     private int mRequestNumber = 1;
 
-    public EventManager(Context context, EventListener listener){
+    public EventManager(Context context, EventListener listener) {
         mApi = new EventfulApi(context, this);
         mListener = listener;
         mCurrentEvents = new ArrayList<>();
@@ -54,17 +54,26 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mEventManager = this;
     }
 
-    public static EventManager getInstance(){
+    public static EventManager getInstance() {
         return mEventManager;
     }
 
-    public void buildEvents(){
+    public static Event findEventById(String id, ArrayList<Event> events) {
+        for (Event event : events) {
+            if (event.getSeid().equals(id)) {
+                return event;
+            }
+        }
+        return null;
+    }
+
+    public void buildEvents() {
         EventCalendar[] calendars = mCalendar.getCalendars();
-        if(calendars != null && calendars.length > 0 && mSelectedCalendars.size() == 0) {
+        if (calendars != null && calendars.length > 0 && mSelectedCalendars.size() == 0) {
             mSelectedCalendars.add(mCalendar.getCalendars()[DEFAULT_CALENDAR_NUM]);
         }
 
-        for(EventCalendar calendar : mSelectedCalendars) {
+        for (EventCalendar calendar : mSelectedCalendars) {
             mCalendar.getEventsFromCalendar(calendar, PROJECTION, new QueryCompletionListener() {
                 @Override
                 public void onComplete(Cursor result) {
@@ -76,33 +85,33 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mDeclinedEvents.addAll(mEcManager.retrieveAllEvents().values());
     }
 
-    public void addCalendar(EventCalendar calendar){
+    public void addCalendar(EventCalendar calendar) {
         mSelectedCalendars.add(calendar);
     }
 
-    public void removeCalendar(EventCalendar calendar){
+    public void removeCalendar(EventCalendar calendar) {
         mSelectedCalendars.remove(calendar);
     }
 
-    public ArrayList<EventCalendar> getSelectedCalendars(){
+    public ArrayList<EventCalendar> getSelectedCalendars() {
         return mSelectedCalendars;
     }
 
-    public void setContext(Context context){
+    public void setContext(Context context) {
         mApi.setContext(context);
     }
 
-    public void loadEvents(int radius){
-        if(mRequestNumber > mPageCount){
+    public void loadEvents(int radius) {
+        if (mRequestNumber > mPageCount) {
             return;
         }
 
         mLoading = true;
         mRadius = radius;
 
-        if(mLocation == null) {
+        if (mLocation == null) {
             LocationManager.getInstance(mApi.getmContext(), this);
-        }else{
+        } else {
             mApi.requestEvents(mLocation, mRadius, EventSearchRequest.SortOrder.DATE, mRequestNumber);
             mRequestNumber++;
         }
@@ -111,7 +120,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     @Override
     public void onEventfulResults(SearchResult results) {
         mLoading = false;
-        if(results != null) {
+        if (results != null) {
             mPageCount = results.getPageCount();
             ArrayList<Event> newEvents = new ArrayList<>(results.getEvents());
             newEvents = mergeEventByTitle(newEvents, mAcceptedEvents);
@@ -121,28 +130,28 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         }
     }
 
-    public boolean isLoading(){
+    public boolean isLoading() {
         return mLoading;
     }
 
-    private ArrayList<Event> mergeEvents(ArrayList<Event> list1, ArrayList<Event> list2){
-        for(Event event1: list1){
+    private ArrayList<Event> mergeEvents(ArrayList<Event> list1, ArrayList<Event> list2) {
+        for (Event event1 : list1) {
             list2.remove(event1);
         }
-        if(!list2.isEmpty()) {
+        if (!list2.isEmpty()) {
             list1.addAll(list2);
         }
         return list1;
     }
 
-    private ArrayList<Event> mergeEventByTitle(ArrayList<Event> list1, ArrayList<Event> list2){
+    private ArrayList<Event> mergeEventByTitle(ArrayList<Event> list1, ArrayList<Event> list2) {
         Iterator<Event> returnIter = list1.iterator();
-        while(returnIter.hasNext()){
+        while (returnIter.hasNext()) {
             Event compEvent = returnIter.next();
             Iterator<Event> removeIter = list2.iterator();
-            while(removeIter.hasNext()){
+            while (removeIter.hasNext()) {
                 Event removeEvent = removeIter.next();
-                if(removeEvent.getTitle().equals(compEvent.getTitle())){
+                if (removeEvent.getTitle().equals(compEvent.getTitle())) {
                     returnIter.remove();
                 }
             }
@@ -151,14 +160,14 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return list1;
     }
 
-    private ArrayList<Event> removeEventsById(ArrayList<Event> original, ArrayList<Event> toRemove){
+    private ArrayList<Event> removeEventsById(ArrayList<Event> original, ArrayList<Event> toRemove) {
         Iterator<Event> originalIter = original.iterator();
-        while(originalIter.hasNext()){
+        while (originalIter.hasNext()) {
             Event origEvent = originalIter.next();
             Iterator<Event> removeIter = toRemove.iterator();
-            while(removeIter.hasNext()){
+            while (removeIter.hasNext()) {
                 Event removeEvent = removeIter.next();
-                if(origEvent.getSeid().equals(removeEvent.getSeid())){
+                if (origEvent.getSeid().equals(removeEvent.getSeid())) {
                     originalIter.remove();
                 }
             }
@@ -166,15 +175,15 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return original;
     }
 
-    public void declineEvent(Event event){
+    public void declineEvent(Event event) {
         mEcManager.insertEvent(event, 0); //TODO - Change this zero. Only for testing purposes.
         mCurrentEvents.remove(event);
         mDeclinedEvents.add(event);
         mListener.onEventsChanged(mCurrentEvents);
     }
 
-    public void acceptEvent(Event event){
-        for(EventCalendar calendar : mSelectedCalendars) {
+    public void acceptEvent(Event event) {
+        for (EventCalendar calendar : mSelectedCalendars) {
             mCalendar.insertEvent(event, calendar.getId());
         }
         mCurrentEvents.remove(event);
@@ -182,25 +191,16 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mListener.onEventsChanged(mCurrentEvents);
     }
 
-    public ArrayList<Event> getAcceptedEvents(){
+    public ArrayList<Event> getAcceptedEvents() {
         return mAcceptedEvents;
     }
 
-    public ArrayList<Event> getDeclinedEvents(){
+    public ArrayList<Event> getDeclinedEvents() {
         return mDeclinedEvents;
     }
 
-    public ArrayList<Event> getCurrentEvents(){
+    public ArrayList<Event> getCurrentEvents() {
         return mCurrentEvents;
-    }
-
-    public static Event findEventById(String id, ArrayList<Event> events){
-        for(Event event : events){
-            if(event.getSeid().equals(id)){
-                return event;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -220,7 +220,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         Toast.makeText(mApi.getmContext(), "Location not available", Toast.LENGTH_SHORT).show();
     }
 
-    public interface EventListener{
+    public interface EventListener {
         void onEventsChanged(ArrayList<Event> updatedEventList);
     }
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by jfowler on 9/4/15.
  */
-public class EventDisplayerFragment extends Fragment implements EventManager.EventListener{
+public class EventDisplayerFragment extends Fragment implements EventManager.EventListener {
 
     public static final String TAG = "EventDisplayerFragment";
     public static final int RADIUS = 15;
@@ -33,11 +33,9 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
     private EventRecyclerViewAdapter mAdapter;
     private RecyclerView mRecList;
     private EventManager mEventManager;
-    private ArrayList<Event> mEvents;
 
     public static EventDisplayerFragment newInstance() {
-        EventDisplayerFragment frag = new EventDisplayerFragment();
-        return frag;
+        return new EventDisplayerFragment();
     }
 
 
@@ -47,8 +45,6 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
 
         mEventManager = new EventManager(mContext, this);
         mEventManager.loadEvents(RADIUS);
-
-        mEvents = new ArrayList<>();
 
         mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
         mRecList.setHasFixedSize(true);
@@ -75,7 +71,7 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
     @Override
     public void onEventsChanged(ArrayList<Event> updatedEventList) {
         mAdapter.updateEventList(updatedEventList);
-        if(!mEventManager.isLoading() && updatedEventList.size() < RELOAD_AT){
+        if (!mEventManager.isLoading() && updatedEventList.size() < RELOAD_AT) {
             mEventManager.loadEvents(RADIUS);
         }
     }

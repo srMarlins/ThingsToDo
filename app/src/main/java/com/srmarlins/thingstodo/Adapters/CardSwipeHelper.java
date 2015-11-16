@@ -9,6 +9,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
+    public static final float SWIPE_THRESHOLD = .85f;
+
     private final CardSwipeHelperAdapter mAdapter;
 
     public CardSwipeHelper(CardSwipeHelperAdapter adapter) {
@@ -45,21 +47,22 @@ public class CardSwipeHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        ((EventRecyclerViewAdapter.ViewHolder)viewHolder).onSwiped(dX);
+        ((EventRecyclerViewAdapter.ViewHolder) viewHolder).onSwiped(dX);
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-        return .8f;
+        return SWIPE_THRESHOLD;
     }
 
     public interface CardSwipeHelperAdapter {
         void onItemMove(int fromPosition, int toPosition);
+
         void onItemDismiss(int position, int direction);
     }
 
-    public interface CardSwipeViewHolderAdapter{
+    public interface CardSwipeViewHolderAdapter {
         void onSwiped(double directionX);
     }
 
