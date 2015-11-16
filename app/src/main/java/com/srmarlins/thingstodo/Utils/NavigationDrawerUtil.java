@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -37,12 +38,8 @@ public class NavigationDrawerUtil {
     public static NavigationDrawerUtil getInstance(AppCompatActivity context) {
         if (mNdUtil == null) {
             mNdUtil = new NavigationDrawerUtil();
-            mNdUtil.setupNavDrawer(context);
             mNdUtil.mPrefs = context.getPreferences(Context.MODE_PRIVATE);
-        } else if (mNdUtil.mNavDrawer == null) {
-            mNdUtil.setupNavDrawer(context);
         }
-
         return mNdUtil;
     }
 
@@ -54,7 +51,7 @@ public class NavigationDrawerUtil {
                 .build();
     }
 
-    private void setupNavDrawer(final AppCompatActivity context) {
+    public void setupNavDrawer(final AppCompatActivity context, Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
         context.setSupportActionBar(toolbar);
 
@@ -76,7 +73,10 @@ public class NavigationDrawerUtil {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         return false;
                     }
-                }).build();
+                })
+                .withShowDrawerOnFirstLaunch(true)
+                .withSavedInstance(savedInstanceState)
+                .build();
 
         context.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mNavDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
