@@ -113,7 +113,6 @@ class MultipartFormOutputStream {
             try {
                 is.close();
             } catch (Exception var8) {
-                ;
             }
 
             this.out.writeBytes("\r\n");

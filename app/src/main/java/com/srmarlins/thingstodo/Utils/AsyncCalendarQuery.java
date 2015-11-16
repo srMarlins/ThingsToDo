@@ -26,7 +26,7 @@ public class AsyncCalendarQuery extends AsyncQueryHandler {
     @Override
     protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
         super.onQueryComplete(token, cookie, cursor);
-        if(mQueryCompletionListener != null && token == CalendarManager.EVENT_QUERY_TOKEN){
+        if (mQueryCompletionListener != null && token == CalendarManager.EVENT_QUERY_TOKEN) {
             mQueryCompletionListener.onComplete(cursor);
         }
     }

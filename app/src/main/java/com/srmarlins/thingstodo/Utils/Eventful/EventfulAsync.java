@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
     private EventfulApi.EventfulResultsListener mListener;
 
-    public EventfulAsync(EventfulApi.EventfulResultsListener listener){
+    public EventfulAsync(EventfulApi.EventfulResultsListener listener) {
         mListener = listener;
     }
 
@@ -30,28 +30,28 @@ public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
         EventOperations eventOperations = new EventOperations();
 
         try {
-           searchResult = eventOperations.search(params[0].getmSearchRequest());
+            searchResult = eventOperations.search(params[0].getmSearchRequest());
         } catch (EVDBRuntimeException e) {
             mListener.onEventfulError(e);
         } catch (EVDBAPIException e) {
             mListener.onEventfulError(e);
         }
 
-        if(searchResult != null) {
+        if (searchResult != null) {
             searchResult.setEvents(removeImagelessResult(searchResult));
         }
 
         return searchResult;
     }
 
-    private ArrayList<Event> removeImagelessResult(SearchResult result){
+    private ArrayList<Event> removeImagelessResult(SearchResult result) {
         ArrayList<Event> events = new ArrayList<>(result.getEvents());
         ArrayList<Event> parsedEvents = new ArrayList<>();
 
-        for(Event event: events){
-            if(event.getImages() != null && !event.getImages().isEmpty()){
+        for (Event event : events) {
+            if (event.getImages() != null && !event.getImages().isEmpty()) {
                 String desc = event.getDescription();
-                if(desc != null){
+                if (desc != null) {
                     event.setDescription(Html.fromHtml(desc).toString());
                 }
                 parsedEvents.add(event);

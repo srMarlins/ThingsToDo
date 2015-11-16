@@ -46,8 +46,7 @@ public class PerformerOperations extends BaseOperations {
         HashMap params = new HashMap();
         params.put("id", spid);
         InputStream is = this.serverCommunication.invokeMethod("/performers/get", params);
-        Performer v = (Performer) this.unmarshallRequest(Performer.class, is);
-        return v;
+        return (Performer) this.unmarshallRequest(Performer.class, is);
     }
 
     public Performer create(Performer p) throws EVDBRuntimeException, EVDBAPIException {

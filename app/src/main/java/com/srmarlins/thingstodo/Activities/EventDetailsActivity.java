@@ -32,7 +32,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         final Event event = getEventFromIntent();
 
-        if(event == null){
+        if (event == null) {
             finish();
         }
 
@@ -68,22 +68,22 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void onEventAccepted(){
+    private void onEventAccepted() {
         finish();
     }
 
-    private void onEventDeclined(){
+    private void onEventDeclined() {
         finish();
     }
 
-    private Event getEventFromIntent(){
+    private Event getEventFromIntent() {
         Event event = null;
 
         String eventId = getIntent().getStringExtra(EVENT_ID);
 
         EventManager manager = EventManager.getInstance();
 
-        if(manager != null){
+        if (manager != null) {
             event = EventManager.findEventById(eventId, manager.getCurrentEvents());
         }
 
@@ -96,7 +96,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            default: return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -44,8 +44,8 @@ public class APIConfiguration {
         }
     }
 
-    public static void setEvdbPassword(String evdbPassword) {
-        evdbPassword = evdbPassword;
+    public static void setEvdbPassword(String password) {
+        evdbPassword = password;
     }
 
     public static String getEvdbUser() throws EVDBRuntimeException {
@@ -56,8 +56,8 @@ public class APIConfiguration {
         }
     }
 
-    public static void setEvdbUser(String evdbUser) {
-        evdbUser = evdbUser;
+    public static void setEvdbUser(String user) {
+        evdbUser = user;
     }
 
     public static RegistryMatcher getRegistryMatcher(){

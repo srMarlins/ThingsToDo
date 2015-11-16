@@ -20,11 +20,7 @@ import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Utils.UIUtils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> implements CardSwipeHelper.CardSwipeHelperAdapter {
 
@@ -38,18 +34,17 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         mManager = manager;
     }
 
-    public void updateEventList(ArrayList<Event> list){
+    public void updateEventList(ArrayList<Event> list) {
         mEventsList = list;
         notifyDataSetChanged();
     }
 
     @Override
     public EventRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                                  int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.event_list_view_item, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -84,9 +79,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public void onItemDismiss(int position, int direction) {
-        if(direction == ItemTouchHelper.START){
+        if (direction == ItemTouchHelper.START) {
             mManager.declineEvent(mEventsList.get(position));
-        }else if(direction == ItemTouchHelper.END){
+        } else if (direction == ItemTouchHelper.END) {
             mManager.acceptEvent(mEventsList.get(position));
         }
         notifyItemRemoved(position);
@@ -116,11 +111,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         public void onSwiped(double x) {
             int layoutColor = 0;
 
-            if(x > COLOR_THRESHOLD){
+            if (x > COLOR_THRESHOLD) {
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_accept);
-            }else if(x == 0.0){
+            } else if (x == 0.0) {
                 layoutColor = Color.WHITE;
-            }else if(x < -COLOR_THRESHOLD){
+            } else if (x < -COLOR_THRESHOLD) {
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_decline);
             }
 

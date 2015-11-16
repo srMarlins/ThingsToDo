@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ThingsToDo.iml" filepath="$PROJECT_DIR$/ThingsToDo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/eventful/eventful.iml" filepath="$PROJECT_DIR$/eventful/eventful.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eventful/eventful.iml" filepath="$PROJECT_DIR$/eventful/eventful.iml" />
       <module fileurl="file://$PROJECT_DIR$/eventful_android/eventful_android.iml" filepath="$PROJECT_DIR$/eventful_android/eventful_android.iml" />
     </modules>
   </component>

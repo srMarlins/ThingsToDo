@@ -18,7 +18,7 @@ public class UIUtils {
     /*
      * Method taken from http://stackoverflow.com/questions/15627530/android-expandable-textview-with-animation
      */
-    public static void expandTextView(TextView tv){
+    public static void expandTextView(TextView tv) {
         ObjectAnimator animation = ObjectAnimator.ofInt(tv, "maxLines", tv.getLineCount());
         animation.setDuration(200).start();
     }
@@ -26,12 +26,12 @@ public class UIUtils {
     /*
      * Method taken from http://stackoverflow.com/questions/15627530/android-expandable-textview-with-animation
      */
-    public static void collapseTextView(TextView tv, int numLines){
+    public static void collapseTextView(TextView tv, int numLines) {
         ObjectAnimator animation = ObjectAnimator.ofInt(tv, "maxLines", numLines);
         animation.setDuration(200).start();
     }
 
-    public static String formatDate(Event event){
+    public static String formatDate(Event event) {
         String dateString = "";
         DateFormat oldF = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         DateFormat newF = new SimpleDateFormat("EEE, MMM dd, h:mm a");
@@ -39,12 +39,12 @@ public class UIUtils {
         try {
             if (event.getStartTime().compareTo(java.util.Calendar.getInstance().getTime()) >= 0) {
                 Date date = oldF.parse(event.getStartTime().toString());
-                dateString = newF.format(date).toString();
+                dateString = newF.format(date);
             } else {
                 Date date = oldF.parse(event.getStopTime().toString());
-                dateString = "Ends: " + newF.format(date).toString();
+                dateString = "Ends: " + newF.format(date);
             }
-        }catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 

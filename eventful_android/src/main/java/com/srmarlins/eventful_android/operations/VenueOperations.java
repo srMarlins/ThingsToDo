@@ -45,8 +45,7 @@ public class VenueOperations extends BaseOperations {
         HashMap params = new HashMap();
         params.put("id", svid);
         InputStream is = this.serverCommunication.invokeMethod("/venues/get", params);
-        Venue v = (Venue) this.unmarshallRequest(Venue.class, is);
-        return v;
+        return (Venue) this.unmarshallRequest(Venue.class, is);
     }
 
     public Venue create(Venue v) throws EVDBRuntimeException, EVDBAPIException {

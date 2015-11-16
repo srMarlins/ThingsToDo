@@ -3,7 +3,6 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:fab="http://schemas.android.com/tools"
               android:gravity="center_horizontal"
               android:orientation="vertical">
 
@@ -48,8 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
-        android:maxLines="2"
         android:gravity="center"
+        android:maxLines="2"
         android:text="This is some test text and stuff and this is a really long title"
         android:textSize="25sp"
         android:textStyle="bold"/>
@@ -67,27 +66,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnFabDecline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_remove_white_48dp"
+            android:layout_marginEnd="75dp"
             app:fab_colorNormal="@color/card_decline"
             app:fab_colorPressed="@color/primary_dark"
-            android:layout_marginEnd="75dp"/>
+            app:fab_icon="@drawable/ic_remove_white_48dp"/>
 
 
         <com.getbase.floatingactionbutton.AddFloatingActionButton
             android:id="@+id/btnFabAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_add_white_48dp"
             app:fab_colorNormal="@color/card_accept"
             app:fab_colorPressed="@color/primary_dark"
+            app:fab_icon="@drawable/ic_add_white_48dp"
             app:layout_anchorGravity="end"/>
 
     </LinearLayout>

@@ -15,7 +15,7 @@ public class PerformerSearchRequest extends SearchRequest {
         this.sortOrder = sortOrder;
     }
 
-    public static enum SortOrder {
+    public enum SortOrder {
         RELEVANCE,
         NAME,
         CATEGORY,
@@ -23,7 +23,7 @@ public class PerformerSearchRequest extends SearchRequest {
         PERFORMER,
         CREATED;
 
-        private SortOrder() {
+        SortOrder() {
         }
     }
 }
