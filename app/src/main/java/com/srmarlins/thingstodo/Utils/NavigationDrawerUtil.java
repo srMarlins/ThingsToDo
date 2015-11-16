@@ -22,6 +22,9 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.srmarlins.thingstodo.Fragments.AcceptedEventsFragment;
+import com.srmarlins.thingstodo.Fragments.DeclinedEventsFragment;
+import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.R;
 
@@ -61,16 +64,36 @@ public class NavigationDrawerUtil {
                 .withAccountHeader(setupNavDrawerHeader(context))
                 .withTranslucentStatusBar(false)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home").withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(FontAwesome.Icon.faw_gear),
-                        new SectionDrawerItem().withDivider(true).withName("Events"),
-                        new SecondaryDrawerItem().withName("Accepted").withIcon(FontAwesome.Icon.faw_check),
-                        new SecondaryDrawerItem().withName("Declined").withIcon(FontAwesome.Icon.faw_close),
-                        new SectionDrawerItem().withDivider(true).withName("Calendars")
+                        new PrimaryDrawerItem().withName(R.string.nav_drawer_home).withIcon(FontAwesome.Icon.faw_home),
+                        new PrimaryDrawerItem().withName(R.string.nav_drawer_settings).withIcon(FontAwesome.Icon.faw_gear),
+                        new SectionDrawerItem().withDivider(true).withName(R.string.nav_drawer_events),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_accepted).withIcon(FontAwesome.Icon.faw_check),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_declined).withIcon(FontAwesome.Icon.faw_close),
+                        new SectionDrawerItem().withDivider(true).withName(R.string.nav_drawer_calendars)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch (position) {
+                            //These numbers correspond to the order in which the drawer items are added
+                            case 1:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
+                                        .commit();
+                                break;
+                            case 2: //TODO - Settings
+                                break;
+                            case 4:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, AcceptedEventsFragment.newInstance(), AcceptedEventsFragment.TAG)
+                                        .commit();
+                                break;
+                            case 5:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, DeclinedEventsFragment.newInstance(), DeclinedEventsFragment.TAG)
+                                        .commit();
+                                break;
+                        }
                         return false;
                     }
                 })

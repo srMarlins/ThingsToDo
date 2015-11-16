@@ -3,4 +3,13 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_home">Events</string>
     <string name="title_activity_event_details">Event Details</string>
+    <string name="nav_drawer_home">Home</string>
+    <string name="nav_drawer_settings">Settings</string>
+    <string name="nav_drawer_events">Events</string>
+    <string name="nav_drawer_accepted">Accepted</string>
+    <string name="nav_drawer_declined">Declined</string>
+    <string name="nav_drawer_calendars">Calendars</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
