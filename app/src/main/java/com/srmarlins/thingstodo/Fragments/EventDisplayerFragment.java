@@ -49,8 +49,8 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
         mRefreshLayout.setOnRefreshListener(this);
 
         mEventManager = new EventManager(mContext, this);
-        mRefreshLayout.setRefreshing(mEventManager.loadEvents(RADIUS));
         mRefreshLayout.setColorSchemeColors(R.color.primary_dark);
+        mRefreshLayout.setRefreshing(mEventManager.loadEvents(RADIUS));
 
         mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
         mRecList.setHasFixedSize(true);
@@ -76,11 +76,11 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
 
     @Override
     public void onEventsChanged(ArrayList<Event> updatedEventList) {
-        mRefreshLayout.setRefreshing(false);
         mAdapter.updateEventList(updatedEventList);
         if (!mEventManager.isLoading() && updatedEventList.size() < RELOAD_AT) {
             mEventManager.loadEvents(RADIUS);
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
