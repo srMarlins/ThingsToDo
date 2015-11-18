@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.srmarlins.thingstodo.Fragments.AcceptedEventsFragment;
 import com.srmarlins.thingstodo.Fragments.DeclinedEventsFragment;
 import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
+import com.srmarlins.thingstodo.Fragments.SettingsFragment;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.R;
 
@@ -81,7 +83,10 @@ public class NavigationDrawerUtil {
                                         .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
                                         .commit();
                                 break;
-                            case 2: //TODO - Settings
+                            case 2:
+                                context.getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, SettingsFragment.newInstance(), SettingsFragment.TAG)
+                                        .commit();
                                 break;
                             case 4:
                                 context.getFragmentManager().beginTransaction()
