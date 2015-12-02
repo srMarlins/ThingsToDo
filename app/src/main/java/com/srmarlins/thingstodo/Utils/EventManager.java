@@ -23,6 +23,7 @@ import java.util.Iterator;
 public class EventManager implements EventfulApi.EventfulResultsListener, LocationManager.LastLocationListener {
 
     public static final int DEFAULT_CALENDAR_NUM = 0;
+    public static final int DEFAULT_RESULTS_SHOWN_NUM = 20;
     public static final String[] PROJECTION = new String[]{CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION};
 
     private static EventManager mEventManager;
@@ -129,6 +130,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
             newEvents = removeEventsById(newEvents, mDeclinedEvents);
             mCurrentEvents = mergeEvents(mCurrentEvents, newEvents);
             mListener.onEventsChanged(mCurrentEvents);
+            if(mCurrentEvents.size() < DEFAULT_RESULTS_SHOWN_NUM){
+                loadEvents(mRadius);
+            }
         }
     }
 
