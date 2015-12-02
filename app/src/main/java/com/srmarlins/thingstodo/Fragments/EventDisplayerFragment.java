@@ -84,6 +84,11 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
         return preferences.getInt(SeekbarPreference.RADIUS, RADIUS);
     }
 
+    public void cancelEventRequest(){
+        mRefreshLayout.setRefreshing(false);
+        mEventManager.cancelRequest();
+    }
+
     @Override
     public void onResume() {
         super.onResume();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -49,7 +50,10 @@ public class SeekbarPreference extends Preference {
     protected void onBindView(View view) {
         super.onBindView(view);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        TextView titleText = (TextView) view.findViewById(R.id.search_title);
+        titleText.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
         final TextView distanceText = (TextView) view.findViewById(R.id.distance_textview);
+        distanceText.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
         AppCompatSeekBar seekBar = (AppCompatSeekBar) view.findViewById(R.id.seekBar);
         seekBar.setMax(100);
         seekBar.setProgress(prefs.getInt(RADIUS, EventDisplayerFragment.RADIUS));

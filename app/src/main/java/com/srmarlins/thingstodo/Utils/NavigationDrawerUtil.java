@@ -1,5 +1,6 @@
 package com.srmarlins.thingstodo.Utils;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -76,25 +77,33 @@ public class NavigationDrawerUtil {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                        FragmentManager fragmentManager = context.getFragmentManager();
+                        EventDisplayerFragment fragment = (EventDisplayerFragment) fragmentManager.findFragmentByTag(EventDisplayerFragment.TAG);
+
+                        if (fragment != null) {
+                            fragment.cancelEventRequest();
+                        }
+
                         switch (position) {
                             //These numbers correspond to the order in which the drawer items are added
                             case 1:
-                                context.getFragmentManager().beginTransaction()
+                                fragmentManager.beginTransaction()
                                         .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
                                         .commit();
                                 break;
                             case 2:
-                                context.getFragmentManager().beginTransaction()
+                                fragmentManager.beginTransaction()
                                         .replace(R.id.fragment_container, SettingsFragment.newInstance(), SettingsFragment.TAG)
                                         .commit();
                                 break;
                             case 4:
-                                context.getFragmentManager().beginTransaction()
+                                fragmentManager.beginTransaction()
                                         .replace(R.id.fragment_container, AcceptedEventsFragment.newInstance(), AcceptedEventsFragment.TAG)
                                         .commit();
                                 break;
                             case 5:
-                                context.getFragmentManager().beginTransaction()
+                                fragmentManager.beginTransaction()
                                         .replace(R.id.fragment_container, DeclinedEventsFragment.newInstance(), DeclinedEventsFragment.TAG)
                                         .commit();
                                 break;

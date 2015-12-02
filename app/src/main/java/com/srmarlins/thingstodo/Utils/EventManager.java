@@ -38,6 +38,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     private CalendarManager mCalendar;
     private ArrayList<EventCalendar> mSelectedCalendars;
     private EventContractManager mEcManager;
+    private boolean mIsCanceled = false;
 
     private int mPageCount = 1;
     private int mRequestNumber = 1;
@@ -107,6 +108,7 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
             return false;
         }
 
+        mIsCanceled = false;
         mLoading = true;
         mRadius = radius;
 
@@ -129,11 +131,17 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
             newEvents = mergeEventByTitle(newEvents, mAcceptedEvents);
             newEvents = removeEventsById(newEvents, mDeclinedEvents);
             mCurrentEvents = mergeEvents(mCurrentEvents, newEvents);
-            mListener.onEventsChanged(mCurrentEvents);
-            if(mCurrentEvents.size() < DEFAULT_RESULTS_SHOWN_NUM){
+            if(!mIsCanceled) {
+                mListener.onEventsChanged(mCurrentEvents);
+            }
+            if(mCurrentEvents.size() < DEFAULT_RESULTS_SHOWN_NUM) {
                 loadEvents(mRadius);
             }
         }
+    }
+
+    public void cancelRequest(){
+        mIsCanceled = true;
     }
 
     public boolean isLoading() {
