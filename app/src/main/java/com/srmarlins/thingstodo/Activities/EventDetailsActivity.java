@@ -1,5 +1,6 @@
 package com.srmarlins.thingstodo.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,8 @@ import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Utils.UIUtils;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -99,5 +102,10 @@ public class EventDetailsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

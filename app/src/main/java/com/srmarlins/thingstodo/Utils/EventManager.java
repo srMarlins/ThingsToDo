@@ -217,6 +217,10 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return mCurrentEvents;
     }
 
+    public Location getLocation(){
+        return mLocation;
+    }
+
     @Override
     public void onEventfulError(Exception e) {
         e.printStackTrace();
