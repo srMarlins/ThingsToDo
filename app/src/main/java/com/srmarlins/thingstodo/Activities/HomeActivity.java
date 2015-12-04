@@ -1,13 +1,15 @@
 package com.srmarlins.thingstodo.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.CalendarManager;
 import com.srmarlins.thingstodo.Utils.NavigationDrawerUtil;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -24,12 +26,17 @@ public class HomeActivity extends AppCompatActivity {
         mNavUtil.addCalendars(calendarManager.getCalendars());
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
+                .add(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
                 .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

@@ -6,6 +6,7 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="colorAccent">@color/primary_dark</item>
     </style>
 
     <style name="ToolBarText">

@@ -3,6 +3,8 @@ package com.srmarlins.thingstodo.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -18,6 +20,7 @@ import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.thingstodo.Activities.EventDetailsActivity;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
+import com.srmarlins.thingstodo.Utils.LocationManager;
 import com.srmarlins.thingstodo.Utils.UIUtils;
 
 import java.util.ArrayList;
@@ -65,6 +68,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
         holder.layout.setBackgroundColor(Color.WHITE);
+        Location venueLocation = new Location("venue");
+        venueLocation.setLatitude(event.getVenueLatitude());
+        venueLocation.setLongitude(event.getVenueLongitude());
+        int distance = (int) Math.ceil(mManager.getLocation().distanceTo(venueLocation) / 1609.344);
+        holder.distance.setText(Integer.toString(distance) + "mi.");
+        holder.distance.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/quicksand.otf"));
     }
 
     @Override
@@ -95,6 +104,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         public TextView title;
         public TextView date;
         public TextView location;
+        private TextView distance;
         public LinearLayout layout;
 
         public ViewHolder(View cardView) {
@@ -104,6 +114,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             this.title = (TextView) mView.findViewById(R.id.txtTitle);
             this.date = (TextView) mView.findViewById(R.id.txtDate);
             this.location = (TextView) mView.findViewById(R.id.txtLoc);
+            this.distance = (TextView) mView.findViewById(R.id.distance_text);
             this.layout = (LinearLayout) mView.findViewById(R.id.card_view_layout);
         }
 
