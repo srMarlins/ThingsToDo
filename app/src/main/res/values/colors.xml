@@ -8,4 +8,9 @@
     <color name="secondary">#AAF0F1EE</color>
     <color name="green">#00796B</color>
     <color name="orange">#EF6C00</color>
+    <color name="purple">#6200EA</color>
+    <color name="teal">#004D40</color>
+    <color name="light_teal">#00BFA5</color>
+    <color name="aqua">#00B8D4</color>
+    <color name="red">#B71C1C</color>
 </resources>

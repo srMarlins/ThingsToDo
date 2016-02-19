@@ -17,6 +17,8 @@ import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Utils.UIUtils;
 
+import java.util.Hashtable;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -37,6 +39,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         if (event == null) {
             finish();
+            return;
         }
 
         ImageView eventImage = (ImageView) findViewById(R.id.event_image);
@@ -47,7 +50,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         AddFloatingActionButton fabAccept = (AddFloatingActionButton) findViewById(R.id.btnFabAccept);
         FloatingActionButton fabDecline = (FloatingActionButton) findViewById(R.id.btnFabDecline);
 
-        Glide.with(this).load(event.getImages().get(event.getImages().size() - 1).getUrl()).into(eventImage);
+        Glide.with(this).load(event.getImage().getUrl()).into(eventImage);
         titleText.setText(event.getTitle());
         dateText.setText(UIUtils.formatDate(event));
         locationText.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
@@ -87,7 +90,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         EventManager manager = EventManager.getInstance();
 
         if (manager != null) {
-            event = EventManager.findEventById(eventId, manager.getCurrentEvents());
+            Hashtable<String, Event> allEvents = new Hashtable<>();
+            allEvents.putAll(manager.getAcceptedEvents());
+            allEvents.putAll(manager.getCurrentEvents());
+            allEvents.putAll(manager.getDeclinedEvents());
+            event = allEvents.get(eventId);
         }
 
         return event;
