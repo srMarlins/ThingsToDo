@@ -8,6 +8,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Transient;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -363,11 +364,18 @@ public class Event {
     }
 
     public Image getImage(){
-        return this.singleImageList;
+        return this.getImages().get(this.getImages().size() - 1);
     }
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public void addImage(Image image){
+        if(images == null){
+            images = new ArrayList<>();
+        }
+        images.add(image);
     }
 
     public List<Tag> getTags() {

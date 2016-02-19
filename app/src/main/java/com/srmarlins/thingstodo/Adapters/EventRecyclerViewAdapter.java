@@ -27,23 +27,23 @@ import com.srmarlins.thingstodo.Utils.RandomMaterialColorGenerator;
 import com.srmarlins.thingstodo.Utils.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> implements CardSwipeHelper.CardSwipeHelperAdapter {
 
     private ArrayList<Event> mEventsList;
     private Context mContext;
     private EventManager mManager;
-    private RandomMaterialColorGenerator mGenerator;
 
     public EventRecyclerViewAdapter(Context context, EventManager manager) {
         mContext = context;
         mEventsList = new ArrayList<>();
         mManager = manager;
-        mGenerator = new RandomMaterialColorGenerator(mContext);
     }
 
-    public void updateEventList(ArrayList<Event> list) {
-        mEventsList = list;
+    public void updateEventList(Hashtable<String, Event> newList) {
+        mEventsList.clear();
+        mEventsList.addAll(newList.values());
         notifyDataSetChanged();
     }
 
@@ -68,17 +68,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             }
         });
 
-        Glide.with(mContext).load(event.getImages().get(event.getImages().size() - 1).getUrl()).into(holder.logo);
+        Glide.with(mContext).load(event.getImage().getUrl()).into(holder.logo);
         holder.date.setText(UIUtils.formatDate(event));
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
         holder.layout.setBackgroundColor(holder.color);
-        /*Location venueLocation = new Location("venue");
-        venueLocation.setLatitude(event.getVenueLatitude());
-        venueLocation.setLongitude(event.getVenueLongitude());
-        int distance = (int) Math.ceil(mManager.getLocation().distanceTo(venueLocation) / 1609.344);
-        holder.distance.setText(Integer.toString(distance) + "mi.");*/
-        //holder.distance.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/quicksand.otf"));
     }
 
     @Override
@@ -115,7 +109,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
         public ViewHolder(View cardView) {
             super(cardView);
-            mView = cardView;
+            this.mView = cardView;
             this.logo = (ImageView) mView.findViewById(R.id.event_image);
             this.title = (TextView) mView.findViewById(R.id.txtTitle);
             this.date = (TextView) mView.findViewById(R.id.txtDate);

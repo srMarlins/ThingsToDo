@@ -98,6 +98,10 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks, Goo
         return bestLocation;
     }
 
+    public static int getDistanceToLocationInMiles(Location currentLocation, Location destinationLocation){
+        return (int) Math.ceil(currentLocation.distanceTo(destinationLocation) / 1609.344);
+    }
+
     @Override
     public void onConnectionSuspended(int i) {
 

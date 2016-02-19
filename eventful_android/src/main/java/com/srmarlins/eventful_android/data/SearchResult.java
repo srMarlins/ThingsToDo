@@ -7,6 +7,8 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 
@@ -68,12 +70,16 @@ public class SearchResult {
     public SearchResult() {
     }
 
-    public List<Event> getEvents() {
-        return this.events;
+    public Hashtable<String, Event> getEvents() {
+        Hashtable<String, Event> eventMap = new Hashtable<>();
+        for(Event event : events){
+            eventMap.put(event.getSeid(), event);
+        }
+        return eventMap;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setEvents(Hashtable<String, Event> events) {
+        this.events = new ArrayList<>(events.values());
     }
 
     public int getFirstItem() {

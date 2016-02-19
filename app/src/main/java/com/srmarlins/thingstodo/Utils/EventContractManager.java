@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 import com.srmarlins.eventful_android.data.Event;
+import com.srmarlins.eventful_android.data.Image;
 import com.srmarlins.thingstodo.Models.Query;
 import com.srmarlins.thingstodo.SQLite.EventContract;
 import com.srmarlins.thingstodo.SQLite.EventDbHelper;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.TimeZone;
 
 /**
@@ -26,8 +28,8 @@ public class EventContractManager {
         mEventDb = new EventDbHelper(context);
     }
 
-    public static HashMap<String, Event> cursorToEvents(Cursor cursor) {
-        HashMap<String, Event> map = new HashMap<>();
+    public static Hashtable<String, Event> cursorToEvents(Cursor cursor) {
+        Hashtable<String, Event> map = new Hashtable<>();
 
         if (!cursor.moveToFirst()) {
             return map;
@@ -40,13 +42,16 @@ public class EventContractManager {
             event.setStopTime(new Date(cursor.getLong(cursor.getColumnIndex(EventContract.EventEntry.END_DATE))));
             event.setTitle(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.TITLE)));
             event.setDescription(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.DESCRIPTION)));
+            Image image = new Image();
+            image.setUrl(cursor.getString(cursor.getColumnIndex(EventContract.EventEntry.EVENT_IMAGE)));
+            event.addImage(image);
             map.put(event.getSeid(), event);
         } while (cursor.moveToNext());
 
         return map;
     }
 
-    public void insertEvent(Event event, long calendarId) {
+    public void insertEvent(Event event, long calendarId, String table) {
         final SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
         AsyncTask<Query, Void, Void> async = new AsyncTask<Query, Void, Void>() {
             @Override
@@ -79,19 +84,19 @@ public class EventContractManager {
         values.put(EventContract.EventEntry.LOCATION, event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
 
         query.values = values;
-        query.table = EventContract.EventEntry.TABLE_NAME;
+        query.table = table;
 
         async.execute(query);
     }
 
-    public void deleteEvent(Event event) {
+    public void deleteEvent(Event event, String table) {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
-        eventDb.delete(EventContract.EventEntry.TABLE_NAME, EventContract.EventEntry.EVENT_ID + "=" + event.getSeid(), null);
+        eventDb.delete(table, EventContract.EventEntry.EVENT_ID + "=" + event.getSeid(), null);
     }
 
-    public Event retrieveEvent(String eventId) {
+    public Event retrieveEvent(String eventId, String table) {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
-        String query = "SELECT  * FROM " + EventContract.EventEntry.TABLE_NAME + " WHERE "
+        String query = "SELECT  * FROM " + table + " WHERE "
                 + EventContract.EventEntry.EVENT_ID + " = " + eventId;
 
         Cursor cursor = eventDb.rawQuery(query, null);
@@ -99,9 +104,9 @@ public class EventContractManager {
         return cursorToEvents(cursor).get(eventId);
     }
 
-    public HashMap<String, Event> retrieveAllEvents() {
+    public Hashtable<String, Event> retrieveAllEvents(String table) {
         SQLiteDatabase eventDb = mEventDb.getWritableDatabase();
-        String query = "SELECT * FROM " + EventContract.EventEntry.TABLE_NAME;
+        String query = "SELECT * FROM " + table;
 
         Cursor cursor = eventDb.rawQuery(query, null);
 

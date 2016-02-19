@@ -10,7 +10,8 @@ public final class EventContract {
     }
 
     public static abstract class EventEntry implements BaseColumns {
-        public static final String TABLE_NAME = "Declined_Events";
+        public static final String TABLE_NAME_DECLINED = "Declined_Events";
+        public static final String TABLE_NAME_ACCEPTED = "Accepted_Events";
         public static final String EVENT_ID = "Event_Id";
         public static final String TITLE = "Title";
         public static final String DESCRIPTION = "Subtitle";

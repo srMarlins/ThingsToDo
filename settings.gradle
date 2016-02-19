@@ -1,1 +1,1 @@
-include ':app', ':eventful', ':eventful_android'
+include ':app', ':eventful_android'

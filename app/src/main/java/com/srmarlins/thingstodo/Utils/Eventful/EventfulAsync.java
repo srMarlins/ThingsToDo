@@ -10,6 +10,7 @@ import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.operations.EventOperations;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 /**
@@ -44,17 +45,17 @@ public class EventfulAsync extends AsyncTask<EventfulApi, Void, SearchResult> {
         return searchResult;
     }
 
-    private ArrayList<Event> removeImagelessResult(SearchResult result) {
-        ArrayList<Event> events = new ArrayList<>(result.getEvents());
-        ArrayList<Event> parsedEvents = new ArrayList<>();
+    private Hashtable<String, Event> removeImagelessResult(SearchResult result) {
+        Hashtable<String, Event> events = new Hashtable<>(result.getEvents());
+        Hashtable<String, Event> parsedEvents = new Hashtable<>();
 
-        for (Event event : events) {
+        for (Event event : events.values()) {
             if (event.getImages() != null && !event.getImages().isEmpty()) {
                 String desc = event.getDescription();
                 if (desc != null) {
                     event.setDescription(Html.fromHtml(desc).toString());
                 }
-                parsedEvents.add(event);
+                parsedEvents.put(event.getSeid(), event);
             }
         }
 

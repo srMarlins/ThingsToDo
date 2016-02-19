@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
+import com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment;
 import com.srmarlins.thingstodo.R;
 
 /**
@@ -56,8 +56,8 @@ public class SeekbarPreference extends Preference {
         distanceText.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
         AppCompatSeekBar seekBar = (AppCompatSeekBar) view.findViewById(R.id.seekBar);
         seekBar.setMax(100);
-        seekBar.setProgress(prefs.getInt(RADIUS, EventDisplayerFragment.RADIUS));
-        distanceText.setText(Integer.toString(prefs.getInt(RADIUS, EventDisplayerFragment.RADIUS)));
+        seekBar.setProgress(prefs.getInt(RADIUS, com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment.RADIUS));
+        distanceText.setText(Integer.toString(prefs.getInt(RADIUS, NewEventDisplayerFragment.RADIUS)));
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

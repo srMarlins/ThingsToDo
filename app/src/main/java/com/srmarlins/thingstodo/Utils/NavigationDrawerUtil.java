@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,9 +23,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.srmarlins.thingstodo.Fragments.AcceptedEventsFragment;
-import com.srmarlins.thingstodo.Fragments.DeclinedEventsFragment;
-import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
+import com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment;
+import com.srmarlins.thingstodo.Fragments.PreviousEventsFragment;
 import com.srmarlins.thingstodo.Fragments.SettingsFragment;
 import com.srmarlins.thingstodo.Models.EventCalendar;
 import com.srmarlins.thingstodo.R;
@@ -79,7 +77,7 @@ public class NavigationDrawerUtil {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
                         FragmentManager fragmentManager = context.getFragmentManager();
-                        EventDisplayerFragment fragment = (EventDisplayerFragment) fragmentManager.findFragmentByTag(EventDisplayerFragment.TAG);
+                        NewEventDisplayerFragment fragment = (NewEventDisplayerFragment) fragmentManager.findFragmentByTag(com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment.TAG);
 
                         if (fragment != null) {
                             fragment.cancelEventRequest();
@@ -89,7 +87,7 @@ public class NavigationDrawerUtil {
                             //These numbers correspond to the order in which the drawer items are added
                             case 1:
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
+                                        .replace(R.id.fragment_container, NewEventDisplayerFragment.newInstance(), com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment.TAG)
                                         .commit();
                                 break;
                             case 2:
@@ -99,12 +97,12 @@ public class NavigationDrawerUtil {
                                 break;
                             case 4:
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.fragment_container, AcceptedEventsFragment.newInstance(), AcceptedEventsFragment.TAG)
+                                        .replace(R.id.fragment_container, PreviousEventsFragment.newInstance(PreviousEventsFragment.ACCEPTED), SettingsFragment.TAG)
                                         .commit();
                                 break;
                             case 5:
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.fragment_container, DeclinedEventsFragment.newInstance(), DeclinedEventsFragment.TAG)
+                                        .replace(R.id.fragment_container, PreviousEventsFragment.newInstance(PreviousEventsFragment.DECLINED), SettingsFragment.TAG)
                                         .commit();
                                 break;
                         }
