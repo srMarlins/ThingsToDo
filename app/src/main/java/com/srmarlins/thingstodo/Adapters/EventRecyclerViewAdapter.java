@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,9 +23,11 @@ import com.srmarlins.thingstodo.Activities.EventDetailsActivity;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Utils.LocationManager;
+import com.srmarlins.thingstodo.Utils.RandomMaterialColorGenerator;
 import com.srmarlins.thingstodo.Utils.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> implements CardSwipeHelper.CardSwipeHelperAdapter {
 
@@ -37,8 +41,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         mManager = manager;
     }
 
-    public void updateEventList(ArrayList<Event> list) {
-        mEventsList = list;
+    public void updateEventList(Hashtable<String, Event> newList) {
+        mEventsList.clear();
+        mEventsList.addAll(newList.values());
         notifyDataSetChanged();
     }
 
@@ -63,17 +68,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             }
         });
 
-        Glide.with(mContext).load(event.getImages().get(event.getImages().size() - 1).getUrl()).into(holder.logo);
+        Glide.with(mContext).load(event.getImage().getUrl()).into(holder.logo);
         holder.date.setText(UIUtils.formatDate(event));
         holder.location.setText(event.getVenueCity() + ", " + event.getVenueRegionAbbreviation());
         holder.title.setText(event.getTitle());
-        holder.layout.setBackgroundColor(Color.WHITE);
-        Location venueLocation = new Location("venue");
-        venueLocation.setLatitude(event.getVenueLatitude());
-        venueLocation.setLongitude(event.getVenueLongitude());
-        int distance = (int) Math.ceil(mManager.getLocation().distanceTo(venueLocation) / 1609.344);
-        holder.distance.setText(Integer.toString(distance) + "mi.");
-        holder.distance.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/quicksand.otf"));
+        holder.layout.setBackgroundColor(holder.color);
     }
 
     @Override
@@ -98,24 +97,25 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements CardSwipeHelper.CardSwipeViewHolderAdapter {
 
-        private static final float COLOR_THRESHOLD = 280.0f;
+        private static final float COLOR_THRESHOLD = 210.0f;
         public View mView;
         public ImageView logo;
         public TextView title;
         public TextView date;
         public TextView location;
-        private TextView distance;
-        public LinearLayout layout;
+        public TextView distance;
+        public RelativeLayout layout;
+        public int color;
 
         public ViewHolder(View cardView) {
             super(cardView);
-            mView = cardView;
+            this.mView = cardView;
             this.logo = (ImageView) mView.findViewById(R.id.event_image);
             this.title = (TextView) mView.findViewById(R.id.txtTitle);
             this.date = (TextView) mView.findViewById(R.id.txtDate);
             this.location = (TextView) mView.findViewById(R.id.txtLoc);
             this.distance = (TextView) mView.findViewById(R.id.distance_text);
-            this.layout = (LinearLayout) mView.findViewById(R.id.card_view_layout);
+            this.layout = (RelativeLayout) mView.findViewById(R.id.card_view_layout);
         }
 
         @Override
@@ -125,7 +125,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             if (x > COLOR_THRESHOLD) {
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_accept);
             } else if (x == 0.0) {
-                layoutColor = Color.WHITE;
+                layoutColor = color;
             } else if (x < -COLOR_THRESHOLD) {
                 layoutColor = ContextCompat.getColor(mView.getContext(), R.color.card_decline);
             }

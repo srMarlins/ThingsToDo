@@ -14,10 +14,5 @@ public class ThingsToDo extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/quicksandbold.otf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
     }
 }

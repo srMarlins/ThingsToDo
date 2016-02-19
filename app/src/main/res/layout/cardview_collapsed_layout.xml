@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/ic_pin"
-                android:tint="@color/orange"
+                android:tint="@android:color/white"
                 android:id="@+id/pin_icon"/>
 
             <TextView
@@ -47,6 +47,7 @@
                 android:layout_toEndOf="@+id/pin_icon"
                 android:textSize="15sp"
                 android:gravity="center"
+                android:textColor="@android:color/white"
                 android:text="99 mi."
                 android:id="@+id/distance_text"/>
 
@@ -57,6 +58,8 @@
         android:id="@+id/event_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:scaleType="centerCrop"/>
 
     <TextView
@@ -75,7 +78,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:text="Sunnyvale, CA"
-        android:textColor="@color/green"
         android:textSize="12sp"/>
 
 

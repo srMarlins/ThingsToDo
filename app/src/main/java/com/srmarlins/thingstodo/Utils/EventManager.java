@@ -1,7 +1,6 @@
 package com.srmarlins.thingstodo.Utils;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.location.Location;
 import android.provider.CalendarContract;
 import android.widget.Toast;
@@ -10,11 +9,11 @@ import com.srmarlins.eventful_android.data.Event;
 import com.srmarlins.eventful_android.data.SearchResult;
 import com.srmarlins.eventful_android.data.request.EventSearchRequest;
 import com.srmarlins.thingstodo.Models.EventCalendar;
-import com.srmarlins.thingstodo.SQLite.QueryCompletionListener;
+import com.srmarlins.thingstodo.SQLite.EventContract;
 import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
@@ -27,9 +26,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     public static final String[] PROJECTION = new String[]{CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION};
 
     private static EventManager mEventManager;
-    private ArrayList<Event> mCurrentEvents;
-    private ArrayList<Event> mDeclinedEvents;
-    private ArrayList<Event> mAcceptedEvents;
+    private Hashtable<String, Event> mCurrentEvents;
+    private Hashtable<String, Event> mDeclinedEvents;
+    private Hashtable<String, Event> mAcceptedEvents;
     private EventfulApi mApi;
     private Location mLocation;
     private int mRadius;
@@ -46,9 +45,9 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     public EventManager(Context context, EventListener listener) {
         mApi = new EventfulApi(context, this);
         mListener = listener;
-        mCurrentEvents = new ArrayList<>();
-        mDeclinedEvents = new ArrayList<>();
-        mAcceptedEvents = new ArrayList<>();
+        mCurrentEvents = new Hashtable<>();
+        mDeclinedEvents = new Hashtable<>();
+        mAcceptedEvents = new Hashtable<>();
         mSelectedCalendars = new ArrayList<>();
         mCalendar = new CalendarManager(context);
         mEcManager = new EventContractManager(context);
@@ -60,31 +59,15 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return mEventManager;
     }
 
-    public static Event findEventById(String id, ArrayList<Event> events) {
-        for (Event event : events) {
-            if (event.getSeid().equals(id)) {
-                return event;
-            }
-        }
-        return null;
-    }
-
     public void buildEvents() {
         EventCalendar[] calendars = mCalendar.getCalendars();
+
         if (calendars != null && calendars.length > 0 && mSelectedCalendars.size() == 0) {
             mSelectedCalendars.add(mCalendar.getCalendars()[DEFAULT_CALENDAR_NUM]);
         }
 
-        for (EventCalendar calendar : mSelectedCalendars) {
-            mCalendar.getEventsFromCalendar(calendar, PROJECTION, new QueryCompletionListener() {
-                @Override
-                public void onComplete(Cursor result) {
-                    mAcceptedEvents.addAll(Arrays.asList(mCalendar.parseEventResultCursor(result)));
-                }
-            });
-        }
-
-        mDeclinedEvents.addAll(mEcManager.retrieveAllEvents().values());
+        mAcceptedEvents.putAll(mEcManager.retrieveAllEvents(EventContract.EventEntry.TABLE_NAME_ACCEPTED));
+        mDeclinedEvents.putAll(mEcManager.retrieveAllEvents(EventContract.EventEntry.TABLE_NAME_DECLINED));
     }
 
     public void addCalendar(EventCalendar calendar) {
@@ -127,20 +110,20 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         mLoading = false;
         if (results != null) {
             mPageCount = results.getPageCount();
-            ArrayList<Event> newEvents = new ArrayList<>(results.getEvents());
-            newEvents = mergeEventByTitle(newEvents, mAcceptedEvents);
+            Hashtable<String, Event> newEvents = new Hashtable<>(results.getEvents());
+            newEvents = mergeEventsByTitle(newEvents, mAcceptedEvents);
             newEvents = removeEventsById(newEvents, mDeclinedEvents);
             mCurrentEvents = mergeEvents(mCurrentEvents, newEvents);
-            if(!mIsCanceled) {
+            if (!mIsCanceled) {
                 mListener.onEventsChanged(mCurrentEvents);
             }
-            if(mCurrentEvents.size() < DEFAULT_RESULTS_SHOWN_NUM) {
+            if (mCurrentEvents.size() < DEFAULT_RESULTS_SHOWN_NUM) {
                 loadEvents(mRadius);
             }
         }
     }
 
-    public void cancelRequest(){
+    public void cancelRequest() {
         mIsCanceled = true;
     }
 
@@ -148,21 +131,18 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return mLoading;
     }
 
-    private ArrayList<Event> mergeEvents(ArrayList<Event> list1, ArrayList<Event> list2) {
-        for (Event event1 : list1) {
-            list2.remove(event1);
+    private Hashtable<String, Event> mergeEvents(Hashtable<String, Event> oldEventMap, Hashtable<String, Event> newEventMap) {
+        for(Event event : newEventMap.values()){
+            oldEventMap.put(event.getSeid(), event);
         }
-        if (!list2.isEmpty()) {
-            list1.addAll(list2);
-        }
-        return list1;
+        return oldEventMap;
     }
 
-    private ArrayList<Event> mergeEventByTitle(ArrayList<Event> list1, ArrayList<Event> list2) {
-        Iterator<Event> returnIter = list1.iterator();
+    private Hashtable<String, Event> mergeEventsByTitle(Hashtable<String, Event> list1, Hashtable<String, Event> list2) {
+        Iterator<Event> returnIter = list1.values().iterator();
         while (returnIter.hasNext()) {
             Event compEvent = returnIter.next();
-            Iterator<Event> removeIter = list2.iterator();
+            Iterator<Event> removeIter = list2.values().iterator();
             while (removeIter.hasNext()) {
                 Event removeEvent = removeIter.next();
                 if (removeEvent.getTitle().equals(compEvent.getTitle())) {
@@ -174,25 +154,17 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         return list1;
     }
 
-    private ArrayList<Event> removeEventsById(ArrayList<Event> original, ArrayList<Event> toRemove) {
-        Iterator<Event> originalIter = original.iterator();
-        while (originalIter.hasNext()) {
-            Event origEvent = originalIter.next();
-            Iterator<Event> removeIter = toRemove.iterator();
-            while (removeIter.hasNext()) {
-                Event removeEvent = removeIter.next();
-                if (origEvent.getSeid().equals(removeEvent.getSeid())) {
-                    originalIter.remove();
-                }
-            }
+    private Hashtable<String, Event> removeEventsById(Hashtable<String, Event> original, Hashtable<String, Event> toRemove) {
+        for(Event event : toRemove.values()){
+            original.remove(event.getSeid());
         }
         return original;
     }
 
     public void declineEvent(Event event) {
-        mEcManager.insertEvent(event, 0); //TODO - Change this zero. Only for testing purposes.
-        mCurrentEvents.remove(event);
-        mDeclinedEvents.add(event);
+        mEcManager.insertEvent(event, 0, EventContract.EventEntry.TABLE_NAME_DECLINED); //TODO - Change this zero. Only for testing purposes.
+        mCurrentEvents.remove(event.getSeid());
+        mDeclinedEvents.put(event.getSeid(), event);
         mListener.onEventsChanged(mCurrentEvents);
     }
 
@@ -200,24 +172,25 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
         for (EventCalendar calendar : mSelectedCalendars) {
             mCalendar.insertEvent(event, calendar.getId());
         }
-        mCurrentEvents.remove(event);
-        mAcceptedEvents.add(event);
+        mEcManager.insertEvent(event, 0, EventContract.EventEntry.TABLE_NAME_ACCEPTED);
+        mCurrentEvents.remove(event.getSeid());
+        mAcceptedEvents.put(event.getSeid(), event);
         mListener.onEventsChanged(mCurrentEvents);
     }
 
-    public ArrayList<Event> getAcceptedEvents() {
+    public Hashtable<String, Event> getAcceptedEvents() {
         return mAcceptedEvents;
     }
 
-    public ArrayList<Event> getDeclinedEvents() {
+    public Hashtable<String, Event> getDeclinedEvents() {
         return mDeclinedEvents;
     }
 
-    public ArrayList<Event> getCurrentEvents() {
+    public Hashtable<String, Event> getCurrentEvents() {
         return mCurrentEvents;
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         return mLocation;
     }
 
@@ -239,6 +212,6 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
     }
 
     public interface EventListener {
-        void onEventsChanged(ArrayList<Event> updatedEventList);
+        void onEventsChanged(Hashtable<String, Event> updatedEventList);
     }
 }

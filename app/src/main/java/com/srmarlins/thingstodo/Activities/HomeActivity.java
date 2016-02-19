@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.srmarlins.thingstodo.Fragments.EventDisplayerFragment;
+import com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment;
 import com.srmarlins.thingstodo.R;
 import com.srmarlins.thingstodo.Utils.CalendarManager;
 import com.srmarlins.thingstodo.Utils.NavigationDrawerUtil;
@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
         mNavUtil.addCalendars(calendarManager.getCalendars());
 
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, EventDisplayerFragment.newInstance(), EventDisplayerFragment.TAG)
+                .add(R.id.fragment_container, NewEventDisplayerFragment.newInstance(), com.srmarlins.thingstodo.Fragments.NewEventDisplayerFragment.TAG)
                 .commit();
     }
 

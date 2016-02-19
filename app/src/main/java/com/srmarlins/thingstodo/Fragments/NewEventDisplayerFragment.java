@@ -23,25 +23,25 @@ import com.srmarlins.thingstodo.Utils.EventManager;
 import com.srmarlins.thingstodo.Views.SeekbarPreference;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  * Created by jfowler on 9/4/15.
  */
-public class EventDisplayerFragment extends Fragment implements EventManager.EventListener, SwipeRefreshLayout.OnRefreshListener {
+public class NewEventDisplayerFragment extends Fragment implements EventManager.EventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String TAG = "EventDisplayerFragment";
+    public static final String TAG = "NewEventDisplayerFragment";
     public static final int RADIUS = 25;
     public static final int RELOAD_AT = 5;
 
     private Context mContext;
     private EventRecyclerViewAdapter mAdapter;
-    private RecyclerView mRecList;
     private EventManager mEventManager;
     private SwipeRefreshLayout mRefreshLayout;
     private int mRadius;
 
-    public static EventDisplayerFragment newInstance() {
-        return new EventDisplayerFragment();
+    public static NewEventDisplayerFragment newInstance() {
+        return new NewEventDisplayerFragment();
     }
 
 
@@ -57,17 +57,17 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
         mRefreshLayout.setColorSchemeColors(R.color.primary_dark);
         mRefreshLayout.setRefreshing(mEventManager.loadEvents(mRadius));
 
-        mRecList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
-        mRecList.setHasFixedSize(true);
+        RecyclerView recList = (RecyclerView) rootView.findViewById(R.id.event_recycler_view);
+        recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecList.setLayoutManager(llm);
+        recList.setLayoutManager(llm);
         mAdapter = new EventRecyclerViewAdapter(mContext, mEventManager);
-        mRecList.setAdapter(mAdapter);
+        recList.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback callback = new CardSwipeHelper(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(mRecList);
+        helper.attachToRecyclerView(recList);
 
         return rootView;
     }
@@ -96,7 +96,7 @@ public class EventDisplayerFragment extends Fragment implements EventManager.Eve
     }
 
     @Override
-    public void onEventsChanged(ArrayList<Event> updatedEventList) {
+    public void onEventsChanged(Hashtable<String, Event> updatedEventList) {
         mAdapter.updateEventList(updatedEventList);
         if (!mEventManager.isLoading() && updatedEventList.size() < RELOAD_AT) {
             mEventManager.loadEvents(mRadius);
