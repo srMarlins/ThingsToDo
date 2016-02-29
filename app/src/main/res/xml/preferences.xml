@@ -3,9 +3,5 @@
 
     <com.srmarlins.thingstodo.Views.SeekbarPreference
                 android:key="seekbar"/>
-
-    <com.srmarlins.thingstodo.Views.TtdCheckboxPreference android:title="Application Updates"
-                        android:defaultValue="false"
-                        android:summary="This option if selected will allow the application to check for latest versions."
-                        android:key="applicationUpdates" />
+    
 </PreferenceScreen>
