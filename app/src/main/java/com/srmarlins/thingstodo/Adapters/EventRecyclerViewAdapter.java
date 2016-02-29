@@ -44,6 +44,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public void updateEventList(Hashtable<String, Event> newList) {
         mEventsList.clear();
         mEventsList.addAll(newList.values());
+        EventManager.sortEventsByDate(mEventsList);
         notifyDataSetChanged();
     }
 
