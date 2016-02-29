@@ -13,8 +13,11 @@ import com.srmarlins.thingstodo.SQLite.EventContract;
 import com.srmarlins.thingstodo.Utils.Eventful.EventfulApi;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by jfowler on 9/14/15.
@@ -192,6 +195,17 @@ public class EventManager implements EventfulApi.EventfulResultsListener, Locati
 
     public Location getLocation() {
         return mLocation;
+    }
+
+    public static ArrayList<Event> sortEventsByDate(ArrayList<Event> eventList){
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event lhs, Event rhs) {
+
+                return lhs.getStartTime().compareTo(rhs.getStartTime());
+            }
+        });
+        return  eventList;
     }
 
     @Override
